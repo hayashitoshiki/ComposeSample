@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.myapp.composesample.R
 import com.myapp.composesample.ui.center.SecondScreen
 import com.myapp.composesample.ui.left.FirstScreen
+import com.myapp.composesample.ui.left.TextGroupScreen
 import com.myapp.composesample.ui.right.ThirdScreen
 import com.myapp.composesample.util.theme.ComposeSampleTheme
 
@@ -86,6 +87,11 @@ sealed class BottomNavigationScreens(val route: String, @StringRes val resourceI
         "third_fragment_navigate",
         R.string.third_nav,
         Icons.Filled.Email)
+
+    object TextGroupScreen : BottomNavigationScreens(
+        "text_group_fragment_navigate",
+        R.string.third_nav,
+        Icons.Filled.Email)
 }
 
 /**
@@ -101,9 +107,10 @@ fun AppNavHost(
         navController = navController,
         startDestination = BottomNavigationScreens.FirstScreen.route
     ) {
-        composable(route = BottomNavigationScreens.FirstScreen.route) { FirstScreen() }
+        composable(route = BottomNavigationScreens.FirstScreen.route) { FirstScreen(navController) }
         composable(route = BottomNavigationScreens.SecondScreen.route) { SecondScreen() }
         composable(route = BottomNavigationScreens.ThirdScreen.route) { ThirdScreen() }
+        composable(route = BottomNavigationScreens. TextGroupScreen.route) { TextGroupScreen() }
     }
 }
 

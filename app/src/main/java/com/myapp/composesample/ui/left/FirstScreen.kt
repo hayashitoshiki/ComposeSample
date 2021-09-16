@@ -19,25 +19,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.myapp.composesample.R
+import com.myapp.composesample.ui.BottomNavigationScreens
 
 /**
  * 左画面
  *
  */
-@Preview(
-    showBackground = true,
-    name = "Light Mode")
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true,
-    name = "Dark Mode"
-)
 @Composable
-fun FirstScreen() {
+fun FirstScreen(navController: NavHostController) {
     Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            ConstraintLayoutContent()
+            ConstraintLayoutContent(navController)
         }
     }
 }
@@ -46,9 +41,8 @@ fun FirstScreen() {
  * コンテンツ
  *
  */
-@Preview(showBackground = true)
 @Composable
-fun ConstraintLayoutContent() {
+fun ConstraintLayoutContent(navController: NavHostController) {
     ConstraintLayout {
         val (title, img, button1, button2, button3) = createRefs()
 
@@ -81,7 +75,15 @@ fun ConstraintLayoutContent() {
 
         // テキストScreenボタン
         Button(
-            onClick = { /* Do something */ },
+            onClick = {
+                navController.navigate(BottomNavigationScreens.TextGroupScreen.route){
+                    popUpTo(BottomNavigationScreens.FirstScreen.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
             modifier = Modifier.constrainAs(button1) {
                 start.linkTo(parent.start, margin = 8.dp)
                 bottom.linkTo(parent.bottom, margin = 64.dp)
@@ -112,5 +114,24 @@ fun ConstraintLayoutContent() {
             Text(stringResource(id = R.string.btn_logic_screen))
         }
 
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    name = "Light Mode")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Dark Mode"
+)
+@Composable
+fun FirstScreenDemo() {
+    val navController = rememberNavController()
+    Scaffold(backgroundColor = Color(0xfff5f5f5)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            ConstraintLayoutContent(navController)
+        }
     }
 }
