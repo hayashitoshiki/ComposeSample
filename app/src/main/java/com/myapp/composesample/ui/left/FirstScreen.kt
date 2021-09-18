@@ -22,7 +22,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.myapp.composesample.R
-import com.myapp.composesample.ui.BottomNavigationScreens
+import com.myapp.composesample.ui.NavigationScreens
 
 /**
  * 左画面
@@ -30,11 +30,9 @@ import com.myapp.composesample.ui.BottomNavigationScreens
  */
 @Composable
 fun FirstScreen(navController: NavHostController) {
-    Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(modifier = Modifier.fillMaxWidth()) {
             ConstraintLayoutContent(navController)
         }
-    }
 }
 
 /**
@@ -76,8 +74,8 @@ fun ConstraintLayoutContent(navController: NavHostController) {
         // テキストScreenボタン
         Button(
             onClick = {
-                navController.navigate(BottomNavigationScreens.TextGroupScreen.route){
-                    popUpTo(BottomNavigationScreens.FirstScreen.route) {
+                navController.navigate(NavigationScreens.TEXT_GROUP_SCREEN.route){
+                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
                         saveState = true
                     }
                     launchSingleTop = true
@@ -94,7 +92,15 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
         // ButtonScreenボタン
         Button(
-            onClick = { /* Do something */ },
+            onClick = {
+                navController.navigate(NavigationScreens.BUTTON_GROUP_SCREEN.route){
+                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
             modifier = Modifier.constrainAs(button2) {
                 start.linkTo(button1.end, margin = 16.dp)
                 bottom.linkTo(button1.bottom)
