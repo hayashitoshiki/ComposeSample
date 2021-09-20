@@ -21,7 +21,8 @@
     <string name="btn_txt_outline">OutlineButton</string>
     <string name="btn_txt_floating_extend">ExtendedFloatingActionButton</string>
 
-
+    <string name="btn_plus">+</string>
+    <string name="btn_minus">-</string>
 
 
 </resources>

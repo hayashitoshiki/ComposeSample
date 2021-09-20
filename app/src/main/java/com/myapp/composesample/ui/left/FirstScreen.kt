@@ -111,7 +111,15 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
         // ロジック関連ボタン
         Button(
-            onClick = { /* Do something */ },
+            onClick = {
+                navController.navigate(NavigationScreens.LOGIC_GROUP_SCREEN.route){
+                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+                      },
             modifier = Modifier.constrainAs(button3) {
                 start.linkTo(button2.end, margin = 16.dp)
                 bottom.linkTo(button2.bottom)

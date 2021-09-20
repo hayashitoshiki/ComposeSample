@@ -4,12 +4,15 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 31
 
     defaultConfig {
+        configurations.all {
+            resolutionStrategy { force 'androidx.compose.runtime:runtime-livedata:1.1.0-alpha03' }
+        }
         applicationId "com.myapp.composesample"
         minSdk 26
-        targetSdk 30
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -64,11 +67,13 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // navigation
-    def navigation_version = "2.4.0-alpha04"
-    implementation "androidx.navigation:navigation-compose:$navigation_version"
+    def compose_navigation_version = "2.4.0-alpha04"
+    implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
     // constraintLayout
-    def constraint_version = "1.0.0-beta02"
-    implementation "androidx.constraintlayout:constraintlayout-compose:$constraint_version"
-
+    def compose_constraint_version = "1.0.0-beta02"
+    implementation "androidx.constraintlayout:constraintlayout-compose:$compose_constraint_version"
+    // liveData
+    def compose_livedata_version = "1.1.0-alpha03"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_livedata_version"
 
 }

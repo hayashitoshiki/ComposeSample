@@ -20,9 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.myapp.composesample.R
 import com.myapp.composesample.ui.center.SecondScreen
-import com.myapp.composesample.ui.left.ButtonGroupScreen
-import com.myapp.composesample.ui.left.FirstScreen
-import com.myapp.composesample.ui.left.TextGroupScreen
+import com.myapp.composesample.ui.left.*
 import com.myapp.composesample.ui.right.ThirdScreen
 
 /**
@@ -69,6 +67,12 @@ enum class NavigationScreens(
         "button_group_fragment_navigate",
         R.string.button_nav,
         Icons.Filled.Email
+    ),
+    LOGIC_GROUP_SCREEN(
+        Group.LEFT,
+        "logic_group_fragment_navigate",
+        R.string.button_nav,
+        Icons.Filled.Email
     );
 
     enum class Group {
@@ -102,6 +106,7 @@ enum class NavigationScreens(
 fun AppNavHost(
     navController: NavHostController
 ) {
+    val logicViewModel = LogicGroupViewModel()
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.FIRST_SCREEN.route
@@ -111,6 +116,7 @@ fun AppNavHost(
         composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
         composable(route = NavigationScreens. TEXT_GROUP_SCREEN.route) { TextGroupScreen() }
         composable(route = NavigationScreens. BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen() }
+        composable(route = NavigationScreens. LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
     }
 }
 
