@@ -8,6 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * ロジック関連画面 UIロジック定義
+ *
+ */
 class LogicGroupViewModel : ViewModel() {
 
     // カウント

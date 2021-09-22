@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 30
 
     defaultConfig {
-        configurations.all {
-            resolutionStrategy { force 'androidx.compose.runtime:runtime-livedata:1.1.0-alpha03' }
-        }
+//        composeOptions {
+//            kotlinCompilerExtensionVersion = "1.1.0-alpha04"
+//        }
         applicationId "com.myapp.composesample"
         minSdk 26
-        targetSdk 31
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -73,7 +73,12 @@ dependencies {
     def compose_constraint_version = "1.0.0-beta02"
     implementation "androidx.constraintlayout:constraintlayout-compose:$compose_constraint_version"
     // liveData
-    def compose_livedata_version = "1.1.0-alpha03"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_livedata_version"
+    def compose_livedata_version = "1.1.0-alpha04"
+    implementation "androidx.compose.runtime:runtime-livedata:1.0.2"
+
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
 }
