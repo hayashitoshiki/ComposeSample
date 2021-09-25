@@ -3,13 +3,16 @@ package com.myapp.composesample.ui.left
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -23,16 +26,69 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.myapp.composesample.R
 import com.myapp.composesample.ui.NavigationScreens
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 左画面
  *
  */
 @Composable
-fun FirstScreen(navController: NavHostController) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            ConstraintLayoutContent(navController)
-        }
+fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
+
+    // effect
+    LaunchedEffect(true) {
+        viewModel.effect.onEach { effect ->
+            when (effect) {
+                is FirstContract.Effect.NavigateToButtonGroupScreen -> {
+                    navController.navigate(NavigationScreens.BUTTON_GROUP_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+                is FirstContract.Effect.NavigateToLogicScreen -> {
+                    navController.navigate(NavigationScreens.LOGIC_GROUP_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+                is FirstContract.Effect.NavigateToTextGroupScreen -> {
+                    navController.navigate(NavigationScreens.TEXT_GROUP_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            }
+        }.collect()
+    }
+
+    // event
+    val navigateToTextGroupScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToTextGroupScreen)
+    }
+    val navigateToButtonGroupScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToButtonGroupScreen)
+    }
+    val navigateToLogicScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToLogicScreen)
+    }
+    // 画面描画
+    Column(modifier = Modifier.fillMaxWidth()) {
+        ConstraintLayoutContent(
+            navigateToTextGroupScreen,
+            navigateToButtonGroupScreen,
+            navigateToLogicScreen
+        )
+    }
 }
 
 /**
@@ -40,7 +96,11 @@ fun FirstScreen(navController: NavHostController) {
  *
  */
 @Composable
-fun ConstraintLayoutContent(navController: NavHostController) {
+fun ConstraintLayoutContent(
+    navigateToTextGroupScreen: () -> Unit,
+    navigateToButtonGroupScreen: () -> Unit,
+    navigateToLogicScreen: () -> Unit
+) {
     ConstraintLayout {
         val (title, img, button1, button2, button3) = createRefs()
 
@@ -73,15 +133,7 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
         // テキストScreenボタン
         Button(
-            onClick = {
-                navController.navigate(NavigationScreens.TEXT_GROUP_SCREEN.route){
-                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
+            onClick = { navigateToTextGroupScreen() },
             modifier = Modifier.constrainAs(button1) {
                 start.linkTo(parent.start, margin = 8.dp)
                 bottom.linkTo(parent.bottom, margin = 64.dp)
@@ -92,15 +144,7 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
         // ButtonScreenボタン
         Button(
-            onClick = {
-                navController.navigate(NavigationScreens.BUTTON_GROUP_SCREEN.route){
-                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
+            onClick = { navigateToButtonGroupScreen() },
             modifier = Modifier.constrainAs(button2) {
                 start.linkTo(button1.end, margin = 16.dp)
                 bottom.linkTo(button1.bottom)
@@ -111,15 +155,7 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
         // ロジック関連ボタン
         Button(
-            onClick = {
-                navController.navigate(NavigationScreens.LOGIC_GROUP_SCREEN.route){
-                    popUpTo(NavigationScreens.FIRST_SCREEN.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-                      },
+            onClick = { navigateToLogicScreen() },
             modifier = Modifier.constrainAs(button3) {
                 start.linkTo(button2.end, margin = 16.dp)
                 bottom.linkTo(button2.bottom)
@@ -134,7 +170,8 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 
 @Preview(
     showBackground = true,
-    name = "Light Mode")
+    name = "Light Mode"
+)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
@@ -143,9 +180,10 @@ fun ConstraintLayoutContent(navController: NavHostController) {
 @Composable
 fun FirstScreenDemo() {
     val navController = rememberNavController()
+    val viewModel = FirstViewModel()
     Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            ConstraintLayoutContent(navController)
+            FirstScreen(viewModel, navController)
         }
     }
 }

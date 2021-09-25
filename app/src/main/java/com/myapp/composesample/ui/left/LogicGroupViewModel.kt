@@ -1,59 +1,74 @@
 package com.myapp.composesample.ui.left
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.myapp.composesample.util.base.BaseViewModel
+import kotlinx.coroutines.*
 
 /**
- * ロジック関連画面 UIロジック定義
+ * ロジック関連画面 UIロジック
  *
  */
-class LogicGroupViewModel : ViewModel() {
+class LogicGroupViewModel :
+    BaseViewModel<LogicContract.State, LogicContract.Effect, LogicContract.Event>() {
 
-    // カウント
-    private val _initCounter : MutableLiveData<Int> = MutableLiveData<Int>(0)
-    val initCounter : LiveData<Int> = _initCounter
+    /**
+     * Stateの初期化
+     *
+     * @return 初期化されたState
+     */
+    override fun initState(): LogicContract.State {
+        return LogicContract.State()
+    }
 
-    // カウント
-    private val _buttonCounter : MutableLiveData<Int> = MutableLiveData<Int>(0)
-    val buttonCounter : LiveData<Int> = _buttonCounter
+    /**
+     * アクションとUIロジクの紐付け
+     *
+     * @param event アクション
+     */
+    override fun handleEvents(event: LogicContract.Event) = when (event) {
+        is LogicContract.Event.CreatedView -> createView()
+        is LogicContract.Event.Disposable -> disposable()
+        is LogicContract.Event.CountUp -> countUp()
+        is LogicContract.Event.CountDown -> countDown()
+        is LogicContract.Event.OnChangeText -> onChangeText(event.text)
+    }
 
-    // テキスト
-    private val _text : MutableLiveData<String> = MutableLiveData<String>("")
-    val text : LiveData<String> =_text
+    private lateinit var job: Job
 
     /**
      * 初期表示
      *
      */
-    fun createView() {
-        viewModelScope.launch {
+    private fun createView() {
+        job = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 for (i in 0..10000000) {
-                    _initCounter.postValue(i)
+                    if (!this.isActive) return@withContext
+                    setState { copy(initCounter = i) }
                 }
             }
         }
     }
 
+    private fun disposable() {
+        job.cancel()
+    }
+
+
     /**
      * カウントアップ
      *
      */
-    fun countUp() {
-        _buttonCounter.value = _buttonCounter.value?.plus(1)
+    private fun countUp() {
+        setState { copy(buttonCounter = this.buttonCounter + 1) }
     }
 
     /**
      * カウントダウン
      *
      */
-    fun countDown() {
-        _buttonCounter.value = _buttonCounter.value?.minus(1)
+    private fun countDown() {
+        setState { copy(buttonCounter = this.buttonCounter - 1) }
     }
 
     /**
@@ -61,7 +76,8 @@ class LogicGroupViewModel : ViewModel() {
      *
      * @param text テキスト変更
      */
-    fun onChangeText(text: String) {
-        _text.value = text
+    private fun onChangeText(text: String) {
+        setState { copy(text = text) }
     }
+
 }

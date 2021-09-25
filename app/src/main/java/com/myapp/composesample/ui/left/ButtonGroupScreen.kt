@@ -8,7 +8,9 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,20 +28,33 @@ import com.myapp.composesample.R
  * テキスト関連画面
  *
  */
-@Preview(
-    showBackground = true,
-    name = "Light Mode"
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true,
-    name = "Dark Mode"
-)
 @Composable
-fun ButtonGroupScreen() {
+fun ButtonGroupScreen(buttonGroupViewModel: ButtonGroupViewModel) {
+
+    // state
+    val state = buttonGroupViewModel.state.value
+
+    // event
+    val changeRadioButton: (Int) ->  Unit = {
+        buttonGroupViewModel.setEvent(ButtonContract.Event.ChangeRadioButton(it))
+    }
+    val changeSwitch: (Boolean) ->  Unit = {
+        buttonGroupViewModel.setEvent(ButtonContract.Event.ChangeSwitch(it))
+    }
+    val changeSlider: (Float) ->  Unit = {
+        buttonGroupViewModel.setEvent(ButtonContract.Event.ChangeSlider(it))
+    }
+
     Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            ButtonScreenMainContent()
+            ButtonScreenMainContent(
+                state.checkedRadioButton,
+                state.sliderValue,
+                state.switchValue,
+                changeRadioButton,
+                changeSlider,
+                changeSwitch
+            )
         }
     }
 }
@@ -49,12 +64,19 @@ fun ButtonGroupScreen() {
  * コンテンツ
  *
  */
-@Preview(showBackground = true)
 @Composable
-private fun ButtonScreenMainContent() {
-    Column( modifier = Modifier
-        .padding(start = 8.dp, bottom = 56.dp)
-        .verticalScroll(rememberScrollState())
+private fun ButtonScreenMainContent(
+    radioButtonValue: Int,
+    slideValue: Float,
+    switchValue: Boolean,
+    changeRadioButton: (Int) -> Unit,
+    changeSlide: (Float) -> Unit,
+    changeSwitch: (Boolean) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(start = 8.dp, bottom = 56.dp)
+            .verticalScroll(rememberScrollState())
     ) {
 
         // タイトル
@@ -87,7 +109,11 @@ private fun ButtonScreenMainContent() {
         ButtonScreenSubTitle("IconToggleButton")
         val checked = remember { mutableStateOf(false) }
         IconToggleButton(checked = checked.value, onCheckedChange = { checked.value = it }) {
-            val tint by animateColorAsState(if (checked.value) Color(0xFFEC407A) else Color(0xFFB0BEC5))
+            val tint by animateColorAsState(
+                if (checked.value) Color(0xFFEC407A) else Color(
+                    0xFFB0BEC5
+                )
+            )
             Icon(Icons.Filled.Favorite, contentDescription = "Localized description", tint = tint)
         }
 
@@ -103,27 +129,26 @@ private fun ButtonScreenMainContent() {
 
         // Radio Button
         ButtonScreenSubTitle("Radio Button")
-        val state = remember { mutableStateOf(1) }
         Row(Modifier.selectableGroup()) {
             RadioButton(
-                selected = state.value == 1,
-                onClick = { state.value = 1 }
+                selected = radioButtonValue == 1,
+                onClick = { changeRadioButton(1) }
             )
             RadioButton(
-                selected = state.value == 2,
-                onClick = { state.value = 2 }
+                selected = radioButtonValue == 2,
+                onClick = { changeRadioButton(2) }
             )
             RadioButton(
-                selected = state.value == 3,
-                onClick = { state.value = 3 }
+                selected = radioButtonValue == 3,
+                onClick = { changeRadioButton(3) }
             )
             RadioButton(
-                selected = state.value == 4,
-                onClick = { state.value = 4 }
+                selected = radioButtonValue == 4,
+                onClick = { changeRadioButton(4) }
             )
             RadioButton(
-                selected = state.value == 5,
-                onClick = { state.value = 5 }
+                selected = radioButtonValue == 5,
+                onClick = { changeRadioButton(5) }
             )
         }
 
@@ -136,7 +161,8 @@ private fun ButtonScreenMainContent() {
             Icon(
                 Icons.Filled.Home,
                 "contentDescription",
-                tint = Color.Black)
+                tint = Color.Black
+            )
         }
 
         // TextButton
@@ -161,7 +187,7 @@ private fun ButtonScreenMainContent() {
         ButtonScreenSubTitle("ExtendedFloatingActionButton")
         ExtendedFloatingActionButton(
             icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-            text = { Text(stringResource(id = R.string.btn_txt_floating_extend))},
+            text = { Text(stringResource(id = R.string.btn_txt_floating_extend)) },
             onClick = { /*TODO*/ }
         )
 
@@ -173,18 +199,16 @@ private fun ButtonScreenMainContent() {
 
         // Slider
         ButtonScreenSubTitle("Slider")
-        val sliderPosition = remember { mutableStateOf(0f) }
         Slider(
-            value = sliderPosition.value,
-            onValueChange = { sliderPosition.value = it }
+            value = slideValue,
+            onValueChange = { changeSlide(it) }
         )
 
         // Switch
         ButtonScreenSubTitle("Switch")
-        val checkedState = remember { mutableStateOf(true) }
         Switch(
-            checked = checkedState.value,
-            onCheckedChange = { checkedState.value = it }
+            checked = switchValue,
+            onCheckedChange = { changeSwitch(it) }
         )
     }
 
@@ -202,4 +226,23 @@ private fun ButtonScreenSubTitle(title: String) {
         fontStyle = FontStyle.Italic,
         modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
     )
+}
+
+@Preview(
+    showBackground = true,
+    name = "Light Mode"
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Dark Mode"
+)
+@Composable
+fun ButtonGroupScreenDemo() {
+    val viewModel = ButtonGroupViewModel()
+    Scaffold(backgroundColor = Color(0xfff5f5f5)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            ButtonGroupScreen(viewModel)
+        }
+    }
 }

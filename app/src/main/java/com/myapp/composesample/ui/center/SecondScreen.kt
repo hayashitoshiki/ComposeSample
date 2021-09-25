@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
  */
 @Preview(showBackground = true)
 @Composable
-fun SecondScreen()  {
+fun SecondScreen() {
     Scaffold(
         backgroundColor = Color(0xfff5f5f5)
     ) {

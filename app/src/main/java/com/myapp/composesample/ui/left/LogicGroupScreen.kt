@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -30,26 +29,36 @@ fun LogicGroupScreen(logicGroupViewModel: LogicGroupViewModel) {
 
     // 初期表示
     LaunchedEffect(true) {
-        logicGroupViewModel.createView()
+        logicGroupViewModel.setEvent(LogicContract.Event.CreatedView)
+    }
+
+    DisposableEffect(true) {
+        onDispose {
+            logicGroupViewModel.setEvent(LogicContract.Event.Disposable)
+        }
     }
 
     // state
-    val initCounter: Int by logicGroupViewModel.initCounter.observeAsState(0)
-    val buttonCounter: Int by logicGroupViewModel.buttonCounter.observeAsState(0)
-    val text: String by logicGroupViewModel.text.observeAsState("")
+    val state: LogicContract.State = logicGroupViewModel.state.value
 
     // event
-    val countUpEvent: () -> Unit = { logicGroupViewModel.countUp() }
-    val countDownEvent: () -> Unit = { logicGroupViewModel.countDown() }
-    val onChangeText: (String) -> Unit = { logicGroupViewModel.onChangeText(it) }
+    val countUpEvent: () -> Unit = {
+        logicGroupViewModel.setEvent(LogicContract.Event.CountUp)
+    }
+    val countDownEvent: () -> Unit = {
+        logicGroupViewModel.setEvent(LogicContract.Event.CountDown)
+    }
+    val onChangeText: (String) -> Unit = {
+        logicGroupViewModel.setEvent(LogicContract.Event.OnChangeText(it))
+    }
 
     // 描画
     Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(modifier = Modifier.fillMaxWidth()) {
             LogicScreenMainContent(
-                initCounter,
-                buttonCounter,
-                text,
+                state.initCounter,
+                state.buttonCounter,
+                state.text,
                 countUpEvent,
                 countDownEvent,
                 onChangeText
@@ -64,7 +73,8 @@ fun LogicGroupScreen(logicGroupViewModel: LogicGroupViewModel) {
 sealed class LogicGroupScreenTag(value: String) : LayoutTag(value) {
     // Button
     object ButtonPlus : LogicGroupScreenTag("LOGIC_SCREEN_BUTTON_PLUS")
-    object ButtonMinus: LogicGroupScreenTag("LOGIC_SCREEN_BUTTON_MINUS")
+    object ButtonMinus : LogicGroupScreenTag("LOGIC_SCREEN_BUTTON_MINUS")
+
     // Text
     object TextCounterTitle : LogicGroupScreenTag("LOGIC_SCREEN_TEXT_COUNTER_TITLE")
     object TextCounter : LogicGroupScreenTag("LOGIC_SCREEN_TEXT_COUNTER")
@@ -72,8 +82,9 @@ sealed class LogicGroupScreenTag(value: String) : LayoutTag(value) {
     object TextCopyText : LogicGroupScreenTag("LOGIC_SCREEN_TEXT_COPY_TEXT")
     object TextInitCounterTitle : LogicGroupScreenTag("LOGIC_COUNTER_TEXT_TITLE")
     object TextInitCounter : LogicGroupScreenTag("LOGIC_COUNTER_TEXT")
+
     // EditText
-    object EditText: LogicGroupScreenTag("LOGIC_SCREEN_EDIT_TEXT")
+    object EditText : LogicGroupScreenTag("LOGIC_SCREEN_EDIT_TEXT")
 }
 
 /**
@@ -85,8 +96,8 @@ private fun LogicScreenMainContent(
     initCounter: Int,
     buttonCounter: Int,
     text: String,
-    countUpEvent : () -> Unit,
-    countDownEvent : () -> Unit,
+    countUpEvent: () -> Unit,
+    countDownEvent: () -> Unit,
     onChangeText: (String) -> Unit
 ) {
     Column {
@@ -95,7 +106,9 @@ private fun LogicScreenMainContent(
         LogicScreenSubTitle("画面描画時非同期取得", LogicGroupScreenTag.TextInitCounterTitle)
         Text(
             text = initCounter.toString(),
-            modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.TextInitCounter.value),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .testTag(LogicGroupScreenTag.TextInitCounter.value),
         )
 
         // + , - ボタン
@@ -103,7 +116,9 @@ private fun LogicScreenMainContent(
         Row(Modifier.selectableGroup()) {
             Button(
                 onClick = { countUpEvent() },
-                modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.ButtonPlus.value),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(LogicGroupScreenTag.ButtonPlus.value),
                 shape = MaterialTheme.shapes.large
             ) {
                 Text(stringResource(id = R.string.btn_plus))
@@ -111,7 +126,9 @@ private fun LogicScreenMainContent(
 
             Button(
                 onClick = { countDownEvent() },
-                modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.ButtonMinus.value),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(LogicGroupScreenTag.ButtonMinus.value),
                 shape = MaterialTheme.shapes.large
             ) {
                 Text(stringResource(id = R.string.btn_minus))
@@ -119,7 +136,9 @@ private fun LogicScreenMainContent(
         }
         Text(
             text = buttonCounter.toString(),
-            modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.TextCounter.value),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .testTag(LogicGroupScreenTag.TextCounter.value),
         )
 
         // Text変更
@@ -128,11 +147,15 @@ private fun LogicScreenMainContent(
             value = text,
             onValueChange = { onChangeText(it) },
             label = { Text("Name") },
-            modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.EditText.value)
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .testTag(LogicGroupScreenTag.EditText.value)
         )
         Text(
             text = text,
-            modifier = Modifier.padding(top = 8.dp).testTag(LogicGroupScreenTag.TextCopyText.value),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .testTag(LogicGroupScreenTag.TextCopyText.value),
         )
 
     }
@@ -148,7 +171,9 @@ private fun LogicScreenSubTitle(title: String, tag: LayoutTag) {
     Text(
         title,
         fontStyle = FontStyle.Italic,
-        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp).testTag(tag.value)
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 4.dp)
+            .testTag(tag.value)
     )
 }
 
