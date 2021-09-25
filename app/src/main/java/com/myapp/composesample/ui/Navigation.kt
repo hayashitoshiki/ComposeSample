@@ -107,16 +107,19 @@ fun AppNavHost(
     navController: NavHostController
 ) {
     val logicViewModel = LogicGroupViewModel()
+    val firstViewModel = FirstViewModel()
+    val textViewModel = TextGroupViewModel()
+    val buttonViewModel = ButtonGroupViewModel()
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.FIRST_SCREEN.route
     ) {
-        composable(route = NavigationScreens.FIRST_SCREEN.route) { FirstScreen(navController) }
+        composable(route = NavigationScreens.FIRST_SCREEN.route) { FirstScreen(firstViewModel, navController) }
         composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen() }
         composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
-        composable(route = NavigationScreens. TEXT_GROUP_SCREEN.route) { TextGroupScreen() }
-        composable(route = NavigationScreens. BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen() }
-        composable(route = NavigationScreens. LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
+        composable(route = NavigationScreens.TEXT_GROUP_SCREEN.route) { TextGroupScreen(textViewModel) }
+        composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
+        composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
     }
 }
 
@@ -136,13 +139,13 @@ fun AppBottomNavigation(
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.imgRes,contentDescription = null) },
-                label = { Text( text = stringResource(id = screen.resourceId)) },
+                icon = { Icon(screen.imgRes, contentDescription = null) },
+                label = { Text(text = stringResource(id = screen.resourceId)) },
                 selected = NavigationScreens.findGroupByRoute(currentRoute) == screen.group,
                 alwaysShowLabel = true,
                 onClick = {
-                    if (NavigationScreens.findGroupByRoute(currentRoute) != screen.group){
-                        navController.navigate(screen.route){
+                    if (NavigationScreens.findGroupByRoute(currentRoute) != screen.group) {
+                        navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
