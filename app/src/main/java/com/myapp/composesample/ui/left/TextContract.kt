@@ -39,20 +39,20 @@ interface TextContract : BaseContract {
          *
          * @property text 変更後のテキスト
          */
-        data class ChangeTxt1(val text: String) : Event()
+        data class ChangeText1(val text: String) : Event()
 
         /**
          * テキスト変更
          *
          * @property text 変更後のテキスト
          */
-        data class ChangeTxt2(val text: String) : Event()
+        data class ChangeText2(val text: String) : Event()
 
         /**
          * テキスト変更
          *
          * @property text 変更後のテキスト
          */
-        data class ChangeTxt3(val text: String) : Event()
+        data class ChangeText3(val text: String) : Event()
     }
 }

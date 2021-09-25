@@ -29,13 +29,13 @@ fun TextGroupScreen(textGroupViewModel: TextGroupViewModel) {
 
     // event
     val changeText1: (String) -> Unit = {
-        textGroupViewModel.setEvent(TextContract.Event.ChangeTxt1(it))
+        textGroupViewModel.setEvent(TextContract.Event.ChangeText1(it))
     }
     val changeText2: (String) -> Unit = {
-        textGroupViewModel.setEvent(TextContract.Event.ChangeTxt2(it))
+        textGroupViewModel.setEvent(TextContract.Event.ChangeText2(it))
     }
     val changeText3: (String) -> Unit = {
-        textGroupViewModel.setEvent(TextContract.Event.ChangeTxt3(it))
+        textGroupViewModel.setEvent(TextContract.Event.ChangeText3(it))
     }
 
     // 画面描画

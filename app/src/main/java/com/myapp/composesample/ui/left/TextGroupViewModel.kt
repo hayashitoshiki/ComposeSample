@@ -24,9 +24,9 @@ class TextGroupViewModel :
      * @param event アクション
      */
     override fun handleEvents(event: TextContract.Event) = when (event) {
-        is TextContract.Event.ChangeTxt1 -> changeText1(event.text)
-        is TextContract.Event.ChangeTxt2 -> changeText2(event.text)
-        is TextContract.Event.ChangeTxt3 -> changeText3(event.text)
+        is TextContract.Event.ChangeText1 -> changeText1(event.text)
+        is TextContract.Event.ChangeText2 -> changeText2(event.text)
+        is TextContract.Event.ChangeText3 -> changeText3(event.text)
     }
 
     /**

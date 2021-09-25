@@ -23,10 +23,12 @@ class ButtonGroupViewModel :
      *
      * @param event アクション
      */
-    override fun handleEvents(event: ButtonContract.Event) = when (event) {
-        is ButtonContract.Event.ChangeRadioButton -> changeRadioButton(event.value)
-        is ButtonContract.Event.ChangeSlider -> changeSlide(event.value)
-        is ButtonContract.Event.ChangeSwitch -> changeSwitch(event.value)
+    override fun handleEvents(event: ButtonContract.Event) {
+        when (event) {
+            is ButtonContract.Event.ChangeRadioButton -> changeRadioButton(event.value)
+            is ButtonContract.Event.ChangeSlider -> changeSlide(event.value)
+            is ButtonContract.Event.ChangeSwitch -> changeSwitch(event.value)
+        }
     }
 
     /**
@@ -36,7 +38,6 @@ class ButtonGroupViewModel :
      */
     private fun changeRadioButton(value: Int) {
         setState { copy(checkedRadioButton = value) }
-
     }
 
     /**
