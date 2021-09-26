@@ -63,13 +63,13 @@ class TextGroupScreenKtTest {
             .assert(hasText("text"))
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(TextGroupScreenTag.EditChange.value)
-            .assert(hasText("キョン"))
+            .assert(hasText("入力欄１"))
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(TextGroupScreenTag.EditChangeMaterial1.value)
-            .assert(hasText("Hello"))
+            .assert(hasText("入力欄２"))
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(TextGroupScreenTag.EditChangeMaterial2.value)
-            .assert(hasText("動的変更"))
+            .assert(hasText("入力欄３"))
             .assertIsDisplayed()
     }
 }

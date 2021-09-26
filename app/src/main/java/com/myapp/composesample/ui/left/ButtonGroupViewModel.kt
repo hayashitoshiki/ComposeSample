@@ -1,12 +1,15 @@
 package com.myapp.composesample.ui.left
 
 import com.myapp.composesample.util.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * ロジック関連画面 UIロジック
  *
  */
-class ButtonGroupViewModel :
+@HiltViewModel
+class ButtonGroupViewModel @Inject constructor() :
     BaseViewModel<ButtonContract.State, ButtonContract.Effect, ButtonContract.Event>() {
 
     /**

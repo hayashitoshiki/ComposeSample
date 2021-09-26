@@ -2,13 +2,16 @@ package com.myapp.composesample.ui.left
 
 import androidx.lifecycle.viewModelScope
 import com.myapp.composesample.util.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 /**
  * ロジック関連画面 UIロジック
  *
  */
-class LogicGroupViewModel :
+@HiltViewModel
+class LogicGroupViewModel @Inject constructor() :
     BaseViewModel<LogicContract.State, LogicContract.Effect, LogicContract.Event>() {
 
     /**
