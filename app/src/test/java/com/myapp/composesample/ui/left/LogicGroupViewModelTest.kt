@@ -1,10 +1,7 @@
 package com.myapp.composesample.ui.left
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.Assert.*
 
 import org.junit.After
@@ -16,6 +13,9 @@ class LogicGroupViewModelTest {
 
     @ExperimentalCoroutinesApi
     private val coroutineDispatcher = TestCoroutineDispatcher()
+
+    @ExperimentalCoroutinesApi
+    private val testScope = TestCoroutineScope(coroutineDispatcher)
 
     private lateinit var viewModel: LogicGroupViewModel
 
@@ -75,15 +75,16 @@ class LogicGroupViewModelTest {
      * 条件：createメソッドが走っている途中に中断処理が走る
      * 期待結果：非同期カウンターが10000000でない(途中で止まる)こと
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun initByCreateViewStop() = runBlocking {
+    fun initByCreateViewStop() = testScope.runBlockingTest {
         val state = LogicContract.State()
         val value = 10000000
         viewModel.setEvent(LogicContract.Event.CreatedView)
         launch {
             while(true) {
                 if (viewModel.state.value.initCounter == 10000000) break
-                if (viewModel.state.value.initCounter == 500000) {
+                if (viewModel.state.value.initCounter > 10) {
                     viewModel.setEvent(LogicContract.Event.Disposable)
                     break
                 }

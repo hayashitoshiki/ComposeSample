@@ -104,12 +104,12 @@ enum class NavigationScreens(
  */
 @Composable
 fun AppNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    logicViewModel: LogicGroupViewModel,
+    firstViewModel: FirstViewModel,
+    textViewModel: TextGroupViewModel,
+    buttonViewModel: ButtonGroupViewModel
 ) {
-    val logicViewModel = LogicGroupViewModel()
-    val firstViewModel = FirstViewModel()
-    val textViewModel = TextGroupViewModel()
-    val buttonViewModel = ButtonGroupViewModel()
     NavHost(
         navController = navController,
         startDestination = NavigationScreens.FIRST_SCREEN.route
