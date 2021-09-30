@@ -2,7 +2,10 @@ package com.myapp.composesample.ui.left
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -10,12 +13,21 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+/**
+ *  テキスト関連画面 ロジック仕様
+ *
+ */
 class TextGroupViewModelTest {
 
-    lateinit var  viewModel: TextGroupViewModel
+    private val state = TextContract.State()
+
+    private lateinit var  viewModel: TextGroupViewModel
 
     @ExperimentalCoroutinesApi
     private val coroutineDispatcher = TestCoroutineDispatcher()
+
+    @ExperimentalCoroutinesApi
+    private val testScope = TestCoroutineScope(coroutineDispatcher)
 
     @ExperimentalCoroutinesApi
     @Before
@@ -30,6 +42,24 @@ class TextGroupViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * 実行結果比較
+     *
+     * @param state Stateの期待値
+     * @param effect Effectの期待値
+     */
+    @ExperimentalCoroutinesApi
+    private fun result(state: TextContract.State, effect: TextContract.Effect?) {
+        val resultState = viewModel.state.value
+        var resultEffect: TextContract.Effect? = null
+        viewModel.effect
+            .onEach { resultEffect = it }
+            .launchIn(testScope)
+        // 比較
+        Assert.assertEquals(state, resultState)
+        Assert.assertEquals(effect, resultEffect)
+    }
+
     // region １つ目の入力値変更
 
     /**
@@ -38,14 +68,18 @@ class TextGroupViewModelTest {
      * 条件：なし
      * 期待結果：１つ目の入力欄設定値が変更されること
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun changeText1() {
-        val state = TextContract.State()
+        // 定数
         val value = "test test"
+        // 期待結果
+        val expectationsState = state.copy(text1 = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(TextContract.Event.ChangeText1(value))
-        val expectations = state.copy(text1 = value)
-        val result = viewModel.state.value
-        Assert.assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -58,14 +92,18 @@ class TextGroupViewModelTest {
      * 条件：なし
      * 期待結果：２つ目の入力欄設定値が変更されること
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun changeText2() {
-        val state = TextContract.State()
+        // 定数
         val value = "hello world"
+        // 期待結果
+        val expectationsState = state.copy(text2 = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(TextContract.Event.ChangeText2(value))
-        val expectations = state.copy(text2 = value)
-        val result = viewModel.state.value
-        Assert.assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -78,14 +116,18 @@ class TextGroupViewModelTest {
      * 条件：なし
      * 期待結果：３つ目の入力欄設定値が変更されること
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun changeText3() {
-        val state = TextContract.State()
+        // 定数
         val value = "こんにちは"
+        // 期待結果
+        val expectationsState = state.copy(text3 = value, textResult = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(TextContract.Event.ChangeText3(value))
-        val expectations = state.copy(text3 = value, textResult = value)
-        val result = viewModel.state.value
-        Assert.assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
      // endregion

@@ -25,7 +25,7 @@ interface LogicContract : BaseContract {
      * UIイベント
      *
      */
-    sealed class Effect : BaseContract.Effect
+    class Effect : BaseContract.Effect
 
     /**
      * アクション

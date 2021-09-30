@@ -3,22 +3,29 @@ package com.myapp.composesample.ui.left
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+/**
+ *  First画面 ロジック仕様
+ *
+ */
 class FirstViewModelTest {
+
+    private lateinit var viewModel:  FirstViewModel
 
     @ExperimentalCoroutinesApi
     private val coroutineDispatcher = TestCoroutineDispatcher()
 
-    private lateinit var viewModel:  FirstViewModel
+    @ExperimentalCoroutinesApi
+    private val testScope = TestCoroutineScope(coroutineDispatcher)
 
     @ExperimentalCoroutinesApi
     @Before
@@ -33,6 +40,24 @@ class FirstViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * 実行結果比較
+     *
+     * @param state Stateの期待値
+     * @param effect Effectの期待値
+     */
+    @ExperimentalCoroutinesApi
+    private fun result(state: FirstContract.State, effect: FirstContract.Effect?) {
+        val resultState = viewModel.state.value
+        var resultEffect: FirstContract.Effect? = null
+        viewModel.effect
+            .onEach { resultEffect = it }
+            .launchIn(testScope)
+        // 比較
+        assertEquals(state, resultState)
+        assertEquals(effect, resultEffect)
+    }
+
     // region ボタン関連画面遷移
 
     /**
@@ -42,12 +67,16 @@ class FirstViewModelTest {
      * 期待結果：ボタン関連画面遷移エフェクトが発行される
      *
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun navigateToButtonGroupScreen() = runBlocking {
+        // 期待結果
+        val expectationsState = FirstContract.State()
+        val expectationsEffect = FirstContract.Effect.NavigateToButtonGroupScreen
+        // 実行
         viewModel.setEvent(FirstContract.Event.NavigateToButtonGroupScreen)
-        val expectations = FirstContract.Effect.NavigateToButtonGroupScreen
-        val result = viewModel.effect.first()
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -61,12 +90,23 @@ class FirstViewModelTest {
      * 期待結果：ロジック関連画面遷移エフェクトが発行される
      *
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun navigateToLogicGroupScreen() = runBlocking {
+    fun navigateToLogicGroupScreen() = testScope.runBlockingTest {
+        // 期待値
+        val expectationsStatus = FirstContract.State()
+        val expectationsEffect= FirstContract.Effect.NavigateToLogicScreen
+        //　実施
         viewModel.setEvent(FirstContract.Event.NavigateToLogicScreen)
-        val expectations = FirstContract.Effect.NavigateToLogicScreen
-        val result = viewModel.effect.first()
-        assertEquals(expectations, result)
+        // 結果
+        val resultState = viewModel.state.value
+        var resultEffect: FirstContract.Effect? = null
+        viewModel.effect
+            .onEach { resultEffect = it }
+            .launchIn(testScope)
+        // 比較
+        assertEquals(expectationsEffect, resultEffect)
+        assertEquals(expectationsStatus, resultState)
     }
 
     // endregion
@@ -80,12 +120,16 @@ class FirstViewModelTest {
      * 期待結果：テキスト関連画面遷移エフェクトが発行される
      *
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun navigateToTextGroupScreen() = runBlocking {
+        // 期待結果
+        val expectationsState = FirstContract.State()
+        val expectationsEffect = FirstContract.Effect.NavigateToTextGroupScreen
+        // 実行
         viewModel.setEvent(FirstContract.Event.NavigateToTextGroupScreen)
-        val expectations = FirstContract.Effect.NavigateToTextGroupScreen
-        val result = viewModel.effect.first()
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion

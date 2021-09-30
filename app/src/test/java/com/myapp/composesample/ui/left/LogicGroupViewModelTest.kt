@@ -1,6 +1,7 @@
 package com.myapp.composesample.ui.left
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.*
 import org.junit.Assert.*
 
@@ -9,15 +10,21 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+/**
+ *  ロジック関連画面 ロジック仕様
+ *
+ */
 class LogicGroupViewModelTest {
+
+    private val state = LogicContract.State()
+
+    private lateinit var viewModel: LogicGroupViewModel
 
     @ExperimentalCoroutinesApi
     private val coroutineDispatcher = TestCoroutineDispatcher()
 
     @ExperimentalCoroutinesApi
     private val testScope = TestCoroutineScope(coroutineDispatcher)
-
-    private lateinit var viewModel: LogicGroupViewModel
 
     @ExperimentalCoroutinesApi
     @Before
@@ -32,6 +39,25 @@ class LogicGroupViewModelTest {
         Dispatchers.resetMain()
     }
 
+
+    /**
+     * 実行結果比較
+     *
+     * @param state Stateの期待値
+     * @param effect Effectの期待値
+     */
+    @ExperimentalCoroutinesApi
+    private fun result(state: LogicContract.State, effect: LogicContract.Effect?) {
+        val resultState = viewModel.state.value
+        var resultEffect: LogicContract.Effect? = null
+        viewModel.effect
+            .onEach { resultEffect = it }
+            .launchIn(testScope)
+        // 比較
+        assertEquals(state, resultState)
+        assertEquals(effect, resultEffect)
+    }
+
     // region 初期化処理
 
     /**
@@ -40,12 +66,14 @@ class LogicGroupViewModelTest {
      * 条件：createメソッドが走っていない
      * 期待結果：非同期カウンターが０であること
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun initByNotCreateView() {
-        val state = LogicContract.State()
-        val expectations = state.copy()
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 期待結果
+        val expectationsState = state.copy()
+        val expectationsEffect = null
+        // 実行・検証
+        result(expectationsState, expectationsEffect)
     }
 
     /**
@@ -54,19 +82,22 @@ class LogicGroupViewModelTest {
      * 条件：createメソッドが走りきっている
      * 期待結果：非同期カウンターが10000000であること
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun initByCreateView() = runBlocking {
-        val state = LogicContract.State()
+    fun initByCreateView()  = testScope.runBlockingTest {
         val value = 10000000
+        // 期待結果
+        val expectationsState =  state.copy(initCounter = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(LogicContract.Event.CreatedView)
         launch {
             while(true) {
                 if (viewModel.state.value.initCounter == 10000000) break
             }
         }.join()
-        val expectations = state.copy(initCounter = value)
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     /**
@@ -78,8 +109,11 @@ class LogicGroupViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun initByCreateViewStop() = testScope.runBlockingTest {
-        val state = LogicContract.State()
         val value = 10000000
+        // 期待結果
+        val expectationsState =  state.copy(initCounter = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(LogicContract.Event.CreatedView)
         launch {
             while(true) {
@@ -90,9 +124,8 @@ class LogicGroupViewModelTest {
                 }
             }
         }.join()
-        val expectations = state.copy(initCounter = value)
-        val result = viewModel.state.value
-        assertNotEquals(expectations, result)
+        // 検証
+        assertNotEquals(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -106,13 +139,16 @@ class LogicGroupViewModelTest {
      * 条件：なし
      * 期待結果：カウンターが１増えること
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun countUp() {
-        val state = LogicContract.State()
+    fun countUp() = testScope.runBlockingTest {
+        // 期待結果
+        val expectationsState = state.copy(buttonCounter = state.buttonCounter + 1)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(LogicContract.Event.CountUp)
-        val expectations = state.copy(buttonCounter = state.buttonCounter + 1)
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -125,13 +161,16 @@ class LogicGroupViewModelTest {
      * 条件：なし
      * 期待結果：カウンターが１減ること
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun countDown() {
-        val state = LogicContract.State()
+    fun countDown() = testScope.runBlockingTest {
+        // 期待値
+        val expectationsState = state.copy(buttonCounter = state.buttonCounter - 1)
+        val expectationsEffect = null
+        //　実行
         viewModel.setEvent(LogicContract.Event.CountDown)
-        val expectations = state.copy(buttonCounter = state.buttonCounter - 1)
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -144,14 +183,18 @@ class LogicGroupViewModelTest {
      * 条件：なし
      * 期待結果：引数で渡した値がテキスト設定値に設定されること
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun changeText() {
-        val state = LogicContract.State()
+    fun changeText() = testScope.runBlockingTest {
+        // 定数
         val value = "test data"
+        // 期待結果
+        val expectationsState = state.copy(text = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(LogicContract.Event.OnChangeText(value))
-        val expectations = state.copy(text = value)
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion

@@ -2,7 +2,10 @@ package com.myapp.composesample.ui.left
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.*
@@ -11,13 +14,21 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-
+/**
+ *  Button関連画面 ロジック仕様
+ *
+ */
 class ButtonGroupViewModelTest {
+
+    private val state = ButtonContract.State()
+
+    private lateinit var viewModel: ButtonGroupViewModel
 
     @ExperimentalCoroutinesApi
     private val coroutineDispatcher = TestCoroutineDispatcher()
 
-    private lateinit var viewModel: ButtonGroupViewModel
+    @ExperimentalCoroutinesApi
+    private val testScope = TestCoroutineScope(coroutineDispatcher)
 
     @ExperimentalCoroutinesApi
     @Before
@@ -32,6 +43,24 @@ class ButtonGroupViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * 実行結果比較
+     *
+     * @param state Stateの期待値
+     * @param effect Effectの期待値
+     */
+    @ExperimentalCoroutinesApi
+    private fun result(state: ButtonContract.State, effect: ButtonContract.Effect?) {
+        val resultState = viewModel.state.value
+        var resultEffect: ButtonContract.Effect? = null
+        viewModel.effect
+            .onEach { resultEffect = it }
+            .launchIn(testScope)
+        // 比較
+        assertEquals(state, resultState)
+        assertEquals(effect, resultEffect)
+    }
+
     // region ラジオボタン変更
 
     /**
@@ -40,16 +69,18 @@ class ButtonGroupViewModelTest {
      * 条件　　：ラジオボタンの数の分だけループ
      * 期待結果：渡された引数が設定されること
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun changeRadioButton() {
-        val state = ButtonContract.State()
-
         // UIに設置されている分だけループ
         for (i in 1..5) {
+            // 期待結果
+            val expectationsState = state.copy(checkedRadioButton = i)
+            val expectationsEffect = null
+            // 実行
             viewModel.setEvent(ButtonContract.Event.ChangeRadioButton(i))
-            val expectations = state.copy(checkedRadioButton = i)
-            val result = viewModel.state.value
-            assertEquals(expectations, result)
+            // 検証
+            result(expectationsState, expectationsEffect)
         }
     }
 
@@ -64,14 +95,18 @@ class ButtonGroupViewModelTest {
      * 期待結果：引数で渡された値がスライダー値に設定されること
      *
      */
+    @ExperimentalCoroutinesApi
     @Test
     fun changeSlide() {
-        val state = ButtonContract.State()
+        // 定数
         val value = 50f
+        // 期待結果
+        val expectationsState = state.copy(sliderValue = value)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(ButtonContract.Event.ChangeSlider(value))
-        val expectations = state.copy(sliderValue = value)
-        val result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion
@@ -81,26 +116,42 @@ class ButtonGroupViewModelTest {
     /**
      * スイッチ変更
      *
-     * 条件：なし
-     * 期待結果：引数で渡された値がスイッチ制御値に設定されること
+     * 条件：OFFにする
+     * 期待結果：引数で渡された値がスイッチ制御値にfalseが設定されること
      *
      */
+    @ExperimentalCoroutinesApi
     @Test
-    fun changeSwitch() {
-        // OFF
-        val state = ButtonContract.State()
+    fun changeSwitchByOff() {
+        // 定数
         val value1 = false
+        // 期待結果
+        val expectationsState = state.copy(switchValue = value1)
+        val expectationsEffect = null
+        // 実行
         viewModel.setEvent(ButtonContract.Event.ChangeSwitch(value1))
-        var expectations = state.copy(switchValue = value1)
-        var result = viewModel.state.value
-        assertEquals(expectations, result)
-
-        // ON
-        val value2 = true
-        viewModel.setEvent(ButtonContract.Event.ChangeSwitch(value2))
-        expectations = state.copy(switchValue = value2)
-        result = viewModel.state.value
-        assertEquals(expectations, result)
+        // 検証
+        result(expectationsState, expectationsEffect)
+    }
+    /**
+     * スイッチ変更
+     *
+     * 条件：ON(true)にする
+     * 期待結果：引数で渡された値がスイッチ制御値にtrueが設定されること
+     *
+     */
+    @ExperimentalCoroutinesApi
+    @Test
+    fun changeSwitchByOn() {
+        // 定数
+        val value = true
+        // 期待結果
+        val expectationsState = state.copy(switchValue = value)
+        val expectationsEffect = null
+        // 実行
+        viewModel.setEvent(ButtonContract.Event.ChangeSwitch(value))
+        // 検証
+        result(expectationsState, expectationsEffect)
     }
 
     // endregion

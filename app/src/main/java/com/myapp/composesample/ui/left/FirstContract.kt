@@ -6,8 +6,10 @@ interface FirstContract : BaseContract {
 
     /**
      * 状態保持
+     *
+     * @property isViewState 状態保持(false = なし)
      */
-    class State : BaseContract.State
+    data class State(val isViewState: Boolean = false) : BaseContract.State
 
     /**
      * UIイベント
