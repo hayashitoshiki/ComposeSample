@@ -31,6 +31,7 @@ class FirstViewModel @Inject constructor() :
         is FirstContract.Event.NavigateToTextGroupScreen -> setEffect { FirstContract.Effect.NavigateToTextGroupScreen }
         is FirstContract.Event.NavigateToTextGroupExtraScreen -> setEffect { FirstContract.Effect.NavigateToTextGroupExtraScreen }
         is FirstContract.Event.NavigateToLogicScreen -> setEffect { FirstContract.Effect.NavigateToLogicScreen }
+        is FirstContract.Event.NavigateToListGroupScreen -> setEffect { FirstContract.Effect.NavigateToListGroupScreen }
     }
 
 

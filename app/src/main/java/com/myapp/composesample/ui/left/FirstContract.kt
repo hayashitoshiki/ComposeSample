@@ -20,6 +20,7 @@ interface FirstContract : BaseContract {
         object NavigateToTextGroupExtraScreen : Effect()
         object NavigateToButtonGroupScreen : Effect()
         object NavigateToLogicScreen : Effect()
+        object NavigateToListGroupScreen : Effect()
     }
 
     /**
@@ -31,5 +32,6 @@ interface FirstContract : BaseContract {
         object NavigateToTextGroupExtraScreen : Event()
         object NavigateToButtonGroupScreen : Event()
         object NavigateToLogicScreen : Event()
+        object NavigateToListGroupScreen : Event()
     }
 }

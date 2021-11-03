@@ -76,6 +76,15 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
                         restoreState = true
                     }
                 }
+                is FirstContract.Effect.NavigateToListGroupScreen -> {
+                    navController.navigate(NavigationScreens.LIST_GROUP_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             }
         }.collect()
     }
@@ -93,13 +102,17 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
     val navigateToLogicScreen: () -> Unit = {
         viewModel.setEvent(FirstContract.Event.NavigateToLogicScreen)
     }
+    val navigateToLListGroupScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToListGroupScreen)
+    }
     // 画面描画
     Column(modifier = Modifier.fillMaxWidth()) {
         ConstraintLayoutContent(
             navigateToTextGroupScreen,
             navigateToTextGroupExtraScreen,
             navigateToButtonGroupScreen,
-            navigateToLogicScreen
+            navigateToLogicScreen,
+            navigateToLListGroupScreen
         )
     }
 }
@@ -113,10 +126,11 @@ fun ConstraintLayoutContent(
     navigateToTextGroupScreen: () -> Unit,
     navigateToTextGroupExtraScreen: () -> Unit,
     navigateToButtonGroupScreen: () -> Unit,
-    navigateToLogicScreen: () -> Unit
+    navigateToLogicScreen: () -> Unit,
+    navigateToLListGroupScreen: () -> Unit
 ) {
     ConstraintLayout {
-        val (title, img, button1, button2, button3, button4) = createRefs()
+        val (title, img, button1, button2, button3, button4, button5) = createRefs()
 
         // タイトル
         Text(
@@ -189,6 +203,16 @@ fun ConstraintLayoutContent(
             Text(stringResource(id = R.string.btn_logic_screen))
         }
 
+        // リスト関連ボタン
+        Button(
+            onClick = { navigateToLListGroupScreen() },
+            modifier = Modifier.constrainAs(button5) {
+                top.linkTo(button4.bottom, margin = 16.dp)
+                start.linkTo(button4.start)
+            }
+        ) {
+            Text(stringResource(id = R.string.btn_list_screen))
+        }
     }
 }
 

@@ -80,6 +80,12 @@ enum class NavigationScreens(
         "logic_group_fragment_navigate",
         R.string.button_nav,
         Icons.Filled.Email
+    ),
+    LIST_GROUP_SCREEN(
+        Group.LEFT,
+        "list_group_extra_fragment_navigate",
+        R.string.button_nav,
+        Icons.Filled.Email
     );
 
     enum class Group {
@@ -128,6 +134,7 @@ fun AppNavHost(
         composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
         composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
+        composable(route = NavigationScreens.LIST_GROUP_SCREEN.route) { ListGroupScreen(viewModel()) }
     }
 }
 

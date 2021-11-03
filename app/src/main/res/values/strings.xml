@@ -14,6 +14,7 @@
     <string name="btn_text_extra_screen">テキスト関連Extra</string>
     <string name="btn_button_screen">Button関連</string>
     <string name="btn_logic_screen">ロジック関連</string>
+    <string name="btn_list_screen">リスト関連</string>
 
     <!-- Button Screen Text -->
     <string name="btn_txt_default">デフォルトボタン</string>
