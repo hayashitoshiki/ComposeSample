@@ -10,15 +10,15 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class TextGroupViewModel @Inject constructor() :
-    BaseViewModel<TextContract.State, TextContract.Effect, TextContract.Event>() {
+    BaseViewModel<TextGroupContract.State, TextGroupContract.Effect, TextGroupContract.Event>() {
 
     /**
      * Stateの初期化
      *
      * @return 初期化されたState
      */
-    override fun initState(): TextContract.State {
-        return TextContract.State()
+    override fun initState(): TextGroupContract.State {
+        return TextGroupContract.State()
     }
 
     /**
@@ -26,10 +26,10 @@ class TextGroupViewModel @Inject constructor() :
      *
      * @param event アクション
      */
-    override fun handleEvents(event: TextContract.Event) = when (event) {
-        is TextContract.Event.ChangeText1 -> changeText1(event.text)
-        is TextContract.Event.ChangeText2 -> changeText2(event.text)
-        is TextContract.Event.ChangeText3 -> changeText3(event.text)
+    override fun handleEvents(event: TextGroupContract.Event) = when (event) {
+        is TextGroupContract.Event.ChangeText1 -> changeText1(event.text)
+        is TextGroupContract.Event.ChangeText2 -> changeText2(event.text)
+        is TextGroupContract.Event.ChangeText3 -> changeText3(event.text)
     }
 
     /**

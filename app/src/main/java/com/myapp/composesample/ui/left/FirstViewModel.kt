@@ -26,12 +26,12 @@ class FirstViewModel @Inject constructor() :
      *
      * @param event アクション
      */
-    override fun handleEvents(event: FirstContract.Event) {
-        when (event) {
-            is FirstContract.Event.NavigateToButtonGroupScreen -> setEffect { FirstContract.Effect.NavigateToButtonGroupScreen }
-            is FirstContract.Event.NavigateToTextGroupScreen -> setEffect { FirstContract.Effect.NavigateToTextGroupScreen }
-            is FirstContract.Event.NavigateToLogicScreen -> setEffect { FirstContract.Effect.NavigateToLogicScreen }
-        }
+    override fun handleEvents(event: FirstContract.Event) = when (event) {
+        is FirstContract.Event.NavigateToButtonGroupScreen -> setEffect { FirstContract.Effect.NavigateToButtonGroupScreen }
+        is FirstContract.Event.NavigateToTextGroupScreen -> setEffect { FirstContract.Effect.NavigateToTextGroupScreen }
+        is FirstContract.Event.NavigateToTextGroupExtraScreen -> setEffect { FirstContract.Effect.NavigateToTextGroupExtraScreen }
+        is FirstContract.Event.NavigateToLogicScreen -> setEffect { FirstContract.Effect.NavigateToLogicScreen }
     }
+
 
 }

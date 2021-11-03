@@ -67,6 +67,15 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
                         restoreState = true
                     }
                 }
+                is FirstContract.Effect.NavigateToTextGroupExtraScreen -> {
+                    navController.navigate(NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             }
         }.collect()
     }
@@ -74,6 +83,9 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
     // event
     val navigateToTextGroupScreen: () -> Unit = {
         viewModel.setEvent(FirstContract.Event.NavigateToTextGroupScreen)
+    }
+    val navigateToTextGroupExtraScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToTextGroupExtraScreen)
     }
     val navigateToButtonGroupScreen: () -> Unit = {
         viewModel.setEvent(FirstContract.Event.NavigateToButtonGroupScreen)
@@ -85,6 +97,7 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ConstraintLayoutContent(
             navigateToTextGroupScreen,
+            navigateToTextGroupExtraScreen,
             navigateToButtonGroupScreen,
             navigateToLogicScreen
         )
@@ -98,11 +111,12 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
 @Composable
 fun ConstraintLayoutContent(
     navigateToTextGroupScreen: () -> Unit,
+    navigateToTextGroupExtraScreen: () -> Unit,
     navigateToButtonGroupScreen: () -> Unit,
     navigateToLogicScreen: () -> Unit
 ) {
     ConstraintLayout {
-        val (title, img, button1, button2, button3) = createRefs()
+        val (title, img, button1, button2, button3, button4) = createRefs()
 
         // タイトル
         Text(
@@ -140,6 +154,17 @@ fun ConstraintLayoutContent(
             }
         ) {
             Text(stringResource(id = R.string.btn_text_screen))
+        }
+
+        // テキストExtraScreenボタン
+        Button(
+            onClick = { navigateToTextGroupExtraScreen() },
+            modifier = Modifier.constrainAs(button4) {
+                start.linkTo(button1.start)
+                top.linkTo(button1.bottom, margin = 16.dp)
+            }
+        ) {
+            Text(stringResource(id = R.string.btn_text_extra_screen))
         }
 
         // ButtonScreenボタン

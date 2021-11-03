@@ -6,7 +6,7 @@ import com.myapp.composesample.util.base.BaseContract
  * ロジック関連画 状態、イベント、エフェクト定義
  *
  */
-interface TextContract : BaseContract {
+interface TextGroupContract : BaseContract {
 
     /**
      * 状態保持

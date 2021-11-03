@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,6 +61,12 @@ enum class NavigationScreens(
         Group.LEFT,
         "text_group_fragment_navigate",
         R.string.third_nav,
+        Icons.Filled.Email
+    ),
+    TEXT_GROUP_EXTRA_SCREEN(
+        Group.LEFT,
+        "button_group_extra_fragment_navigate",
+        R.string.button_nav,
         Icons.Filled.Email
     ),
     BUTTON_GROUP_SCREEN(
@@ -118,6 +125,7 @@ fun AppNavHost(
         composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen() }
         composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
         composable(route = NavigationScreens.TEXT_GROUP_SCREEN.route) { TextGroupScreen(textViewModel) }
+        composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
         composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
     }
@@ -147,7 +155,7 @@ fun AppBottomNavigation(
                     if (NavigationScreens.findGroupByRoute(currentRoute) != screen.group) {
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                                saveState = false
                             }
                             launchSingleTop = true
                             restoreState = true

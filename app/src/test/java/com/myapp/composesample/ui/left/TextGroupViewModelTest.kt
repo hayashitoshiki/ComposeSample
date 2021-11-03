@@ -19,7 +19,7 @@ import org.junit.Test
  */
 class TextGroupViewModelTest {
 
-    private val state = TextContract.State()
+    private val state = TextGroupContract.State()
 
     private lateinit var  viewModel: TextGroupViewModel
 
@@ -49,9 +49,9 @@ class TextGroupViewModelTest {
      * @param effect Effectの期待値
      */
     @ExperimentalCoroutinesApi
-    private fun result(state: TextContract.State, effect: TextContract.Effect?) {
+    private fun result(state: TextGroupContract.State, effect: TextGroupContract.Effect?) {
         val resultState = viewModel.state.value
-        var resultEffect: TextContract.Effect? = null
+        var resultEffect: TextGroupContract.Effect? = null
         viewModel.effect
             .onEach { resultEffect = it }
             .launchIn(testScope)
@@ -77,7 +77,7 @@ class TextGroupViewModelTest {
         val expectationsState = state.copy(text1 = value)
         val expectationsEffect = null
         // 実行
-        viewModel.setEvent(TextContract.Event.ChangeText1(value))
+        viewModel.setEvent(TextGroupContract.Event.ChangeText1(value))
         // 検証
         result(expectationsState, expectationsEffect)
     }
@@ -101,7 +101,7 @@ class TextGroupViewModelTest {
         val expectationsState = state.copy(text2 = value)
         val expectationsEffect = null
         // 実行
-        viewModel.setEvent(TextContract.Event.ChangeText2(value))
+        viewModel.setEvent(TextGroupContract.Event.ChangeText2(value))
         // 検証
         result(expectationsState, expectationsEffect)
     }
@@ -125,7 +125,7 @@ class TextGroupViewModelTest {
         val expectationsState = state.copy(text3 = value, textResult = value)
         val expectationsEffect = null
         // 実行
-        viewModel.setEvent(TextContract.Event.ChangeText3(value))
+        viewModel.setEvent(TextGroupContract.Event.ChangeText3(value))
         // 検証
         result(expectationsState, expectationsEffect)
     }

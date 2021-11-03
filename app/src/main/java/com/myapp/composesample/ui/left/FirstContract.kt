@@ -17,6 +17,7 @@ interface FirstContract : BaseContract {
      */
     sealed class Effect : BaseContract.Effect {
         object NavigateToTextGroupScreen : Effect()
+        object NavigateToTextGroupExtraScreen : Effect()
         object NavigateToButtonGroupScreen : Effect()
         object NavigateToLogicScreen : Effect()
     }
@@ -27,6 +28,7 @@ interface FirstContract : BaseContract {
      */
     sealed class Event : BaseContract.Event {
         object NavigateToTextGroupScreen : Event()
+        object NavigateToTextGroupExtraScreen : Event()
         object NavigateToButtonGroupScreen : Event()
         object NavigateToLogicScreen : Event()
     }
