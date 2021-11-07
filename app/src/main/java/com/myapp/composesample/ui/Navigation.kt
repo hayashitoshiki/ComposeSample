@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -129,7 +130,7 @@ fun AppNavHost(
     ) {
         composable(route = NavigationScreens.FIRST_SCREEN.route) { FirstScreen(firstViewModel, navController) }
         composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen() }
-        composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
+        composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen(navController, hiltViewModel()) }
         composable(route = NavigationScreens.TEXT_GROUP_SCREEN.route) { TextGroupScreen(textViewModel) }
         composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
