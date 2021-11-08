@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.myapp.composesample.ui.NavigationScreens
 import com.myapp.composesample.util.component.BigWhiteImageButton
 import com.myapp.composesample.util.component.SendPhotoHistoryListButton
 import com.myapp.composesample.util.component.SendPhotoHistoryTopic
@@ -83,6 +84,7 @@ fun SendPhotoTopContent(
                     onClickNegativeAction = { openDialog.value = false },
                     onClickPositiveAction = {
                         openDialog.value = false
+                        navController.navigate(NavigationScreens.SEND_PHOTO_SCREEN.route)
                         //    navController.navigate()
                     }
                 )

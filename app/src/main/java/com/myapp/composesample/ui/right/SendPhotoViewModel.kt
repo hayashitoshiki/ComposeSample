@@ -1,9 +1,6 @@
 package com.myapp.composesample.ui.right
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,10 +19,16 @@ class SendPhotoViewModel: ViewModel() {
     val lastNameText: LiveData<String> = _lastNameText
     private val _commentText: MutableLiveData<String> = MutableLiveData<String>("")
     val commentText: LiveData<String> = _commentText
-    private val _enabledAddPhotoButton: MutableLiveData<Boolean> = MutableLiveData<Boolean>(true)
+    private val _enabledAddPhotoButton: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>()
     val enabledAddPhotoButton: LiveData<Boolean> = _enabledAddPhotoButton
-    private val _enabledSendButton: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    private val _enabledSendButton: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>()
     val enabledSendButton: LiveData<Boolean> = _enabledSendButton
+    private val _photoList: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    val photoList: LiveData<List<String>> = _photoList
+    private val _deleteIndex: MutableLiveData<Int> = MutableLiveData<Int>(-1)
+    val deleteIndex: LiveData<Int> = _deleteIndex
+    private val _isDeleteDialog: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isDeleteDialog: LiveData<Boolean> = _isDeleteDialog
 
     // error
     private val _lastNameErrorMessage: MutableLiveData<String> = MutableLiveData<String>("")
@@ -36,6 +39,14 @@ class SendPhotoViewModel: ViewModel() {
     // effect
     private val _effect: Channel<Effect> = Channel()
     val effect: Flow<Effect> = _effect.receiveAsFlow()
+
+
+    init {
+        _enabledAddPhotoButton.addSource(_photoList){ it.size < 20 }
+        _enabledSendButton.addSource(_firstNameText){ changeEnableSendButton() }
+        _enabledSendButton.addSource(_lastNameErrorMessage){ changeEnableSendButton() }
+        _enabledSendButton.addSource(_photoList){ changeEnableSendButton() }
+    }
 
     /**
      * 姓変更
@@ -93,16 +104,49 @@ class SendPhotoViewModel: ViewModel() {
         _commentText.value = value
     }
 
+    fun add() {
+        val list = _photoList.value?.toMutableList() ?: return
+        list.add(list.size.toString())
+        _photoList.value = list
+    }
+
+    fun delete(index: Int) {
+        val list = _photoList.value?.toMutableList() ?: return
+        if (!(0 <= index && index < list.size)) return
+        list.removeAt(index)
+        _photoList.value = list
+        clearDeleteDialog()
+    }
+
+    fun openDeleteDialog(index: Int) {
+        _deleteIndex.value = index
+        _isDeleteDialog.value = true
+    }
+
+    fun clearDeleteDialog() {
+        _deleteIndex.value = -1
+        _isDeleteDialog.value = false
+    }
+
+    private fun changeEnableSendButton() {
+        val firstName = _firstNameText.value ?: return
+        val lastName = _lastNameText.value ?: return
+        val listSize = _photoList.value?.size ?: return
+        _enabledSendButton.value = when {
+            firstName.isBlank() -> false
+            lastName.isBlank() -> false
+            listSize == 0 -> false
+             else -> true
+        }
+    }
+
     /**
      * 送信ボタン押下
      *
      */
     fun onClickSend() {
         // TODO : 送信処理
-        // 崇信してエラーならエラー値を設定
-        // 成功なら画像変換を呼び出し
-        // 成功なら返還後、格納して削除
-        // 失敗は？？？
+        viewModelScope.launch { _effect.send(Effect.FocusChangeLastNameToComment) }
     }
 
     /**
@@ -110,11 +154,19 @@ class SendPhotoViewModel: ViewModel() {
      *
      */
     fun deleteImage() {
-
+        // TODO : 画像削除
     }
 
+    /**
+     * UIイベント
+     *
+     */
     enum class Effect {
+        // 名入力蘭へフォーカス移動
         FocusChangeFirstNameToLastName,
-        FocusChangeLastNameToComment
+        // コメント入力欄へフォーカス移動
+        FocusChangeLastNameToComment,
+        // 写真送信開始画面へ遷移
+        NavigateToSendPhotoStart
     }
 }
