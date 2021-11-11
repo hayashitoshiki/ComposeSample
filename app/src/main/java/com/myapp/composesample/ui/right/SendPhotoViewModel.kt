@@ -29,6 +29,8 @@ class SendPhotoViewModel: ViewModel() {
     val deleteIndex: LiveData<Int> = _deleteIndex
     private val _isDeleteDialog: MutableLiveData<Boolean> = MutableLiveData(false)
     val isDeleteDialog: LiveData<Boolean> = _isDeleteDialog
+    private val _isOpenCameraView: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isOpenCameraView: LiveData<Boolean> = _isOpenCameraView
 
     // error
     private val _lastNameErrorMessage: MutableLiveData<String> = MutableLiveData<String>("")
@@ -104,18 +106,25 @@ class SendPhotoViewModel: ViewModel() {
         _commentText.value = value
     }
 
-    fun add() {
+    fun add(uri: String) {
         val list = _photoList.value?.toMutableList() ?: return
-        list.add(list.size.toString())
-        _photoList.value = list
+        list.add(uri)
+        _photoList.postValue(list)
+        _isOpenCameraView.postValue(false)
+    }
+
+    fun openCameraView(){
+        _isOpenCameraView.value = true
     }
 
     fun delete(index: Int) {
         val list = _photoList.value?.toMutableList() ?: return
         if (!(0 <= index && index < list.size)) return
-        list.removeAt(index)
+        val fileName = list[index]
+        list.remove(fileName)
         _photoList.value = list
         clearDeleteDialog()
+       // usecase.deletePhotoFile(fileName)
     }
 
     fun openDeleteDialog(index: Int) {

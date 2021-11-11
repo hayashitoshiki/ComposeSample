@@ -15,6 +15,19 @@ interface PhotoUseCase {
      * @return 画像送信履歴
      */
     suspend fun updateSendPhotoList(index: Int): List<SendPhotoHistory>
+
+    /**
+     * 画像ファイル削除
+     *
+     * @param filename
+     */
+    suspend fun deletePhotoFile(filename: String)
+
+    /**
+     * 全画像ファイル削除
+     *
+     */
+    suspend fun deleteAllPhotoFile()
 }
 
 class PhotoUseCaseImp @Inject constructor(
@@ -57,5 +70,13 @@ class PhotoUseCaseImp @Inject constructor(
 
 
         // リストの件数更新
+    }
+
+    override suspend fun deletePhotoFile(filename: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAllPhotoFile() {
+        TODO("Not yet implemented")
     }
 }

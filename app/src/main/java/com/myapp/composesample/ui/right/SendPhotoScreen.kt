@@ -1,27 +1,27 @@
 package com.myapp.composesample.ui.right
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import android.net.Uri
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
+import coil.compose.rememberImagePainter
 import com.myapp.composesample.util.component.SubTitleGroup
 import com.myapp.composesample.util.theme.*
 import kotlinx.coroutines.flow.collect
@@ -55,6 +55,21 @@ private fun SendPhotoContent(viewModel: SendPhotoViewModel) {
     val listChunked = list.chunked(3)
     val deleteIndex by viewModel.deleteIndex.observeAsState(-1)
     val isDeleteDialog by viewModel.isDeleteDialog.observeAsState(false)
+    val isOpenCameraView: Boolean by viewModel.isOpenCameraView.observeAsState(false)
+    var isGranted by remember { mutableStateOf(false) }
+//    Log.d("内部ファイルリスト", "file list size :" + files.size)
+//    Log.d("内部ファイルリスト", "file list :" + files)
+
+//    // 全権取得
+//    val context = LocalContext.current
+//    var filesDir: Array<String> = context.fileList()
+//    // １件削除
+//    context.deleteFile(cacheFileName)
+//    // 全件削除
+//    context.fileList().forEach {
+//        context.deleteFile(it)
+//    }
+
 
     // effect
     val focusManager = LocalFocusManager.current
@@ -73,7 +88,7 @@ private fun SendPhotoContent(viewModel: SendPhotoViewModel) {
             }
         }.collect()
     }
-
+    Box(modifier = Modifier.fillMaxSize()){
     Scaffold(backgroundColor = Color(0xfff5f5f5)) {
         Column(
             modifier = Modifier
@@ -137,12 +152,12 @@ private fun SendPhotoContent(viewModel: SendPhotoViewModel) {
                 modifier = Modifier.padding(top = 40.dp)
             )
             Column(modifier = Modifier.padding(top = 20.dp)) {
-                for (textList in listChunked) {
+                for (imageUriList in listChunked) {
                     Row {
-                        for (text in textList) {
+                        for (imageUri in imageUriList) {
                             TextListItem(
-                                text = text,
-                                onClickAction = { viewModel.openDeleteDialog(list.indexOf(text)) }
+                                imageUri = imageUri,
+                                onClickAction = { viewModel.openDeleteDialog(list.indexOf(imageUri)) }
                             )
                         }
                     }
@@ -151,9 +166,7 @@ private fun SendPhotoContent(viewModel: SendPhotoViewModel) {
             if (enableAddPhotoButton) {
                 CommonRedFrameButton(
                     text = "写真を追加する",
-                    onClickAction = {
-                        // TODO : カメラ処理
-                        viewModel.add() },
+                    onClickAction = { viewModel.openCameraView() },
                     modifier = Modifier.padding(top = 30.dp, start = 15.dp, end = 15.dp)
                 )
             }
@@ -172,33 +185,17 @@ private fun SendPhotoContent(viewModel: SendPhotoViewModel) {
                 )
             }
         }
-////            Button(
-////                onClick = { },
-////                enabled = false,
-////                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.5.dp),
-////                colors = ButtonDefaults.textButtonColors(
-////                    backgroundColor = IconCheckedColor,
-////                    contentColor = IconCheckedColor,
-////                    disabledContentColor = IconCheckedColor
-////                ),
-////                shape = CircleShape,
-////                modifier = Modifier
-////                    .height(48.dp)
-////                    .fillMaxWidth()
-////                    .constrainAs(btnSendPhoto) {
-////                        top.linkTo(btnAddPhoto.bottom, margin = 30.dp)
-////                        start.linkTo(btnAddPhoto.start)
-////                        end.linkTo(btnAddPhoto.end)
-////                    }
-////            ) {
-////                Text(
-////                    modifier = Modifier,
-////                    text = "送信する",
-////                    fontSize = 16.sp,
-////                    color = TextColorLight
-////                )
-////            }
-//        }
+    }
+        // カメラ表示
+        if (isOpenCameraView) {
+            PermissionHandler { isGranted = it }
+            if (isGranted) {
+                CameraView(
+                    onImageCaptured = { viewModel.add(it.toString()) },
+                    onError = {}
+                )
+            }
+        }
     }
 }
 
@@ -300,64 +297,21 @@ fun CommonRedFrameButton(text: String, onClickAction: () -> Unit, modifier: Modi
 }
 
 /**
- * テキスリスト表示用のItem
+ * 画像リスト表示用のItem
  *
  */
 @Composable
-fun TextListItem(text: String, onClickAction: () -> Unit) {
-    Button(
+fun TextListItem(imageUri: String, onClickAction: () -> Unit) {
+    IconButton(
         onClick = onClickAction,
         modifier = Modifier
             .clip(RoundedCornerShape(24.dp))
             .size(124.dp)
             .fillMaxWidth()
-            .background(ButtonPrimaryColor)
     ) {
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+        Image(
+            painter = rememberImagePainter(imageUri.toUri()),
+            contentDescription = null,
         )
-    }
-//    Card(
-//        backgroundColor = Color.Red,
-//        modifier = Modifier
-//            .size(124.dp)
-//            .padding(4.dp),
-//        elevation = 8.dp,
-//    ) {
-//        Text(
-//            text = text,
-//            fontWeight = FontWeight.Bold,
-//            fontSize = 30.sp,
-//            color = Color(0xFFFFFFFF),
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.padding(16.dp)
-//        )
-//    }
-}
-
-@Composable
-fun WhiteRedFrameButton(text: String, onClickAction: () -> Unit, modifier: Modifier) {
-    Box(modifier = modifier) {
-        Button(
-            onClick = onClickAction,
-            border = BorderStroke(2.dp, ButtonPrimaryColor),
-            shape = RoundedCornerShape(50),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.White,
-                contentColor = ButtonPrimaryColor
-            ),
-        ) {
-            Text(
-                text = text,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = ButtonPrimaryColor
-            )
-        }
     }
 }
