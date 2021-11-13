@@ -1,8 +1,6 @@
 package com.myapp.composesample.ui
 
-import android.content.Context
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.myapp.composesample.ui.left.*
+import com.myapp.composesample.util.component.AppBottomNavigation
 import com.myapp.composesample.util.theme.ComposeSampleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,15 +50,8 @@ fun ComposeBaseApp(
 ) {
     ComposeSampleTheme {
         val navController = rememberNavController()
-        val bottomNavigationItems = listOf(
-            NavigationScreens.FIRST_SCREEN,
-            NavigationScreens.SECOND_SCREEN,
-            NavigationScreens.THIRD_SCREEN
-        )
         Scaffold(
-            bottomBar = {
-                AppBottomNavigation(navController, bottomNavigationItems)
-            },
+            bottomBar = { AppBottomNavigation(navController) },
             backgroundColor = Color(0xfff5f5f5)
         ) {
             AppNavHost(

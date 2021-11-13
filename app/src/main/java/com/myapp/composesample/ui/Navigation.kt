@@ -1,24 +1,16 @@
 package com.myapp.composesample.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.myapp.composesample.R
 import com.myapp.composesample.ui.center.SecondScreen
 import com.myapp.composesample.ui.left.*
@@ -29,69 +21,39 @@ import com.myapp.composesample.ui.right.ThirdScreen
  *
  * @property group Bottomタブ
  * @property route 遷移パス
- * @property resourceId ナビゲーションタイトル
- * @property imgRes ナビゲーションアイコン
+ * @property resourceId 画面タイトル
  */
 enum class NavigationScreens(
     val group: Group,
     val route: String,
-    @StringRes val resourceId: Int,
-    val imgRes: ImageVector
+    @StringRes val resourceId: Int
 ) {
 
-    FIRST_SCREEN(
-        Group.LEFT,
-        "first_fragment_navigate",
-        R.string.first_nav,
-        Icons.Filled.Home
-    ),
-    SECOND_SCREEN(
-        Group.CENTER,
-        "second_fragment_navigate",
-        R.string.second_nav,
-        Icons.Filled.Info
-    ),
-    THIRD_SCREEN(
-        Group.RIGHT,
-        "third_fragment_navigate",
-        R.string.third_nav,
-        Icons.Filled.Email
-    ),
-    TEXT_GROUP_SCREEN(
-        Group.LEFT,
-        "text_group_fragment_navigate",
-        R.string.third_nav,
-        Icons.Filled.Email
-    ),
-    TEXT_GROUP_EXTRA_SCREEN(
-        Group.LEFT,
-        "button_group_extra_fragment_navigate",
-        R.string.button_nav,
-        Icons.Filled.Email
-    ),
-    BUTTON_GROUP_SCREEN(
-        Group.LEFT,
-        "button_group_fragment_navigate",
-        R.string.button_nav,
-        Icons.Filled.Email
-    ),
-    LOGIC_GROUP_SCREEN(
-        Group.LEFT,
-        "logic_group_fragment_navigate",
-        R.string.button_nav,
-        Icons.Filled.Email
-    ),
-    LIST_GROUP_SCREEN(
-        Group.LEFT,
-        "list_group_extra_fragment_navigate",
-        R.string.button_nav,
-        Icons.Filled.Email
-    );
+    // 左タブ
+    FIRST_SCREEN(Group.LEFT, "first_fragment_navigate", R.string.first_nav),
+    TEXT_GROUP_SCREEN(Group.LEFT, "text_group_fragment_navigate", R.string.third_nav),
+    TEXT_GROUP_EXTRA_SCREEN(Group.LEFT, "button_group_extra_fragment_navigate", R.string.button_nav),
+    BUTTON_GROUP_SCREEN(Group.LEFT, "button_group_fragment_navigate", R.string.button_nav),
+    LOGIC_GROUP_SCREEN(Group.LEFT, "logic_group_fragment_navigate", R.string.button_nav),
+    LIST_GROUP_SCREEN(Group.LEFT, "list_group_extra_fragment_navigate", R.string.button_nav),
 
-    enum class Group {
-        LEFT, CENTER, RIGHT;
+    // 中央タブ
+    SECOND_SCREEN(Group.CENTER, "second_fragment_navigate", R.string.second_nav),
+
+    // 右タブ
+    THIRD_SCREEN(Group.RIGHT, "third_fragment_navigate", R.string.third_nav);
+
+    /**
+     * ナビゲーションタブ定義
+     *
+     * @property title タブタイトル
+     * @property imgRes タブアイコン
+     */
+    enum class Group(@StringRes val title: Int, val imgRes: ImageVector) {
+        LEFT(R.string.bottom_bar_title_left, Icons.Filled.Email),
+        CENTER(R.string.bottom_bar_title_center, Icons.Filled.Info),
+        RIGHT(R.string.bottom_bar_title_right, Icons.Filled.Home);
     }
-
 
     companion object {
         /**
@@ -107,11 +69,10 @@ enum class NavigationScreens(
                 .firstOrNull()
         }
     }
-
 }
 
 /**
- * NavigationHost
+ * NavigationHost 画面遷移定義
  *
  * @param navController ナビゲーションAPI
  */
@@ -135,41 +96,5 @@ fun AppNavHost(
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
         composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
         composable(route = NavigationScreens.LIST_GROUP_SCREEN.route) { ListGroupScreen(viewModel()) }
-    }
-}
-
-/**
- * BottomNavigation
- *
- * @param navController ナビゲーションAPI
- * @param items navigationタブリスト
- */
-@Composable
-fun AppBottomNavigation(
-    navController: NavHostController,
-    items: List<NavigationScreens>
-) {
-    BottomNavigation {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = { Icon(screen.imgRes, contentDescription = null) },
-                label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = NavigationScreens.findGroupByRoute(currentRoute) == screen.group,
-                alwaysShowLabel = true,
-                onClick = {
-                    if (NavigationScreens.findGroupByRoute(currentRoute) != screen.group) {
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = false
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
-            )
-        }
     }
 }

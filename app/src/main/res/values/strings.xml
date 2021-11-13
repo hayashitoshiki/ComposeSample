@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">ComposeSample</string>
 
+    <!-- BottomBar Title -->
+    <string name="bottom_bar_title_left">左</string>
+    <string name="bottom_bar_title_center">中央</string>
+    <string name="bottom_bar_title_right">右</string>
+
     <string name="first_nav">First</string>
     <string name="second_nav">Second</string>
     <string name="third_nav">Third</string>
