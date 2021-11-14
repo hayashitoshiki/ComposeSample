@@ -22,15 +22,15 @@ fun AppBottomNavigation(navController: NavHostController) {
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
-        NavigationScreens.values().forEach { screen ->
+        NavigationScreens.Group.values().forEach { group ->
             BottomNavigationItem(
-                icon = { Icon(screen.group.imgRes, contentDescription = null) },
-                label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = NavigationScreens.findGroupByRoute(currentRoute) == screen.group,
+                icon = { Icon(group.imgRes, contentDescription = null) },
+                label = { Text(text = stringResource(id = group.title)) },
+                selected = NavigationScreens.findGroupByRoute(currentRoute) == group,
                 alwaysShowLabel = true,
                 onClick = {
-                    if (NavigationScreens.findGroupByRoute(currentRoute) != screen.group) {
-                        navController.navigate(screen.route) {
+                    if (NavigationScreens.findGroupByRoute(currentRoute) != group) {
+                        navController.navigate(group.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = false
                             }

@@ -48,11 +48,24 @@ enum class NavigationScreens(
      *
      * @property title タブタイトル
      * @property imgRes タブアイコン
+     * @property route タブの先頭のroute
      */
-    enum class Group(@StringRes val title: Int, val imgRes: ImageVector) {
-        LEFT(R.string.bottom_bar_title_left, Icons.Filled.Email),
-        CENTER(R.string.bottom_bar_title_center, Icons.Filled.Info),
-        RIGHT(R.string.bottom_bar_title_right, Icons.Filled.Home);
+    enum class Group(@StringRes val title: Int, val imgRes: ImageVector, val route: String) {
+        LEFT(
+            R.string.bottom_bar_title_left,
+            Icons.Filled.Email,
+            "first_fragment_navigate"
+        ),
+        CENTER(
+            R.string.bottom_bar_title_center,
+            Icons.Filled.Info,
+        "second_fragment_navigate"
+        ),
+        RIGHT(
+            R.string.bottom_bar_title_right,
+            Icons.Filled.Home,
+        "third_fragment_navigate"
+        );
     }
 
     companion object {
