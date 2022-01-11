@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +24,8 @@ class MainActivity : ComponentActivity() {
     private val textViewModel: TextGroupViewModel by viewModels()
     private val buttonViewModel: ButtonGroupViewModel by viewModels()
 
+    @ExperimentalComposeUiApi
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,6 +45,8 @@ class MainActivity : ComponentActivity() {
  * ベース画面
  *
  */
+@ExperimentalComposeUiApi
+@ExperimentalFoundationApi
 @Composable
 fun ComposeBaseApp(
     logicViewModel: LogicGroupViewModel,
@@ -65,6 +71,8 @@ fun ComposeBaseApp(
 }
 
 @Preview(showBackground = true)
+@ExperimentalComposeUiApi
+@ExperimentalFoundationApi
 @Composable
 fun DefaultPreview() {
     ComposeSampleTheme {
