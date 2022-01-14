@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.myapp.composesample.R
+import com.myapp.composesample.ui.center.ResponsibleConstraintScreen
 import com.myapp.composesample.ui.center.SecondScreen
 import com.myapp.composesample.ui.left.*
 import com.myapp.composesample.ui.right.ThirdScreen
@@ -42,6 +43,7 @@ enum class NavigationScreens(
 
     // 中央タブ
     SECOND_SCREEN(Group.CENTER, "second_fragment_navigate", R.string.second_nav),
+    RESPONSIBLE_SCREEN(Group.CENTER, "responsible_fragment_navigate", R.string.second_nav),
 
     // 右タブ
     THIRD_SCREEN(Group.RIGHT, "third_fragment_navigate", R.string.third_nav);
@@ -106,8 +108,8 @@ fun AppNavHost(
         navController = navController,
         startDestination = NavigationScreens.FIRST_SCREEN.route
     ) {
+        // 左タブ
         composable(route = NavigationScreens.FIRST_SCREEN.route) { FirstScreen(firstViewModel, navController) }
-        composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen() }
         composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
         composable(route = NavigationScreens.TEXT_GROUP_SCREEN.route) { TextGroupScreen(textViewModel) }
 //        composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
@@ -116,6 +118,10 @@ fun AppNavHost(
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
         composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
         composable(route = NavigationScreens.LIST_GROUP_SCREEN.route) { ListGroupScreen(viewModel()) }
+
+        // 中央タブ
+        composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen(navController) }
+        composable(route = NavigationScreens.RESPONSIBLE_SCREEN.route) { ResponsibleConstraintScreen(navController) }
 
     }
 }

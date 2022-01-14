@@ -1,29 +1,29 @@
 package com.myapp.composesample.ui.center
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import com.myapp.composesample.ui.NavigationScreens
 
 /**
  * 中央画面
  *
  */
-@Preview(showBackground = true)
 @Composable
-fun SecondScreen() {
+fun SecondScreen(navController: NavHostController) {
     Scaffold(
         backgroundColor = Color(0xfff5f5f5)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Text(text = "Second")
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            Button(
+                onClick = { navController.navigate(NavigationScreens.RESPONSIBLE_SCREEN.route) }
+            ){
+                Text(text = "レスポンシブルレイアウト")
+            }
         }
     }
 }
