@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -15,7 +17,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsPadding
 import com.myapp.composesample.util.base.LayoutTag
+import com.myapp.composesample.util.component.AutoSizeText
 
 /**
  * テキスト関連画面
@@ -39,19 +43,15 @@ fun TextGroupScreen(textGroupViewModel: TextGroupViewModel) {
     }
 
     // 画面描画
-    Scaffold(backgroundColor = Color(0xfff5f5f5)) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            TextScreenMainContent(
-                state.text1,
-                state.text2,
-                state.text3,
-                state.textResult,
-                changeText1,
-                changeText2,
-                changeText3
-            )
-        }
-    }
+    TextScreenMainContent(
+        state.text1,
+        state.text2,
+        state.text3,
+        state.textResult,
+        changeText1,
+        changeText2,
+        changeText3
+    )
 }
 
 
@@ -89,77 +89,93 @@ private fun TextScreenMainContent(
     changeText2: (String) -> Unit,
     changeText3: (String) -> Unit
 ) {
-    Column {
-
-        // テキスト
-        Text(
-            "Text 一覧",
-            fontStyle = FontStyle.Italic,
+    Scaffold(backgroundColor = Color(0xfff5f5f5)) {
+        Column(
             modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.TextTitle.value)
-        )
+                .padding(bottom = 64.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
+            // テキスト
+            Text(
+                "Text 一覧",
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.TextTitle.value)
+            )
 
-        // テキストフィールド
-        TextScreenSubTitle("変更不可能なテキストフィールド", TextGroupScreenTag.TextTitleNotChange)
-        TextField(
-            value = "キョン",
-            onValueChange = {},
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.EditNotChange.value)
-        )
+            // テキストフィールド
+            TextScreenSubTitle("変更不可能なテキストフィールド", TextGroupScreenTag.TextTitleNotChange)
+            TextField(
+                value = "キョン",
+                onValueChange = {},
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.EditNotChange.value)
+            )
 
-        // マテリアルテキストフィールド
-        TextScreenSubTitle("変更不可能なマテリアルフィールド", TextGroupScreenTag.TextTitleNotChangeMaterial)
-        OutlinedTextField(
-            value = "text",
-            onValueChange = { },
-            label = { Text("Label") },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.EditNotChangeMaterial.value),
-        )
+            // マテリアルテキストフィールド
+            TextScreenSubTitle("変更不可能なマテリアルフィールド", TextGroupScreenTag.TextTitleNotChangeMaterial)
+            OutlinedTextField(
+                value = "text",
+                onValueChange = { },
+                label = { Text("Label") },
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.EditNotChangeMaterial.value),
+            )
 
-        // 変更可能なテキストフィールド
-        TextScreenSubTitle("変更可能なテキストフィールド", TextGroupScreenTag.TextTitleChange)
-        TextField(
-            value = text1,
-            onValueChange = { changeText1(it) },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.EditChange.value)
-        )
+            // 変更可能なテキストフィールド
+            TextScreenSubTitle("変更可能なテキストフィールド", TextGroupScreenTag.TextTitleChange)
+            TextField(
+                value = text1,
+                onValueChange = { changeText1(it) },
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.EditChange.value)
+            )
 
-        // 変更可能なマテリアルフィールド
-        TextScreenSubTitle("変更可能なマテリアルフィールド", TextGroupScreenTag.TextTitleChangeMaterial1)
-        OutlinedTextField(
-            value = text2,
-            onValueChange = { changeText2(it) },
-            label = { Text("Label") },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.EditChangeMaterial1.value)
-        )
+            // 変更可能なマテリアルフィールド
+            TextScreenSubTitle("変更可能なマテリアルフィールド", TextGroupScreenTag.TextTitleChangeMaterial1)
+            OutlinedTextField(
+                value = text2,
+                onValueChange = { changeText2(it) },
+                label = { Text("Label") },
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.EditChangeMaterial1.value)
+            )
+            Text(
+                text = "テキストサイズ自動調整",
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            AutoSizeText(
+                text = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほ",
+                maxLines = 1,
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
-        // 変更可能なマテリアルフィールド
-        TextScreenSubTitle("変更を動的反映", TextGroupScreenTag.TextTitleChangeMaterial2)
-        OutlinedTextField(
-            value = text3,
-            onValueChange = { changeText3(it) },
-            label = { Text("動的変更") },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .testTag(TextGroupScreenTag.EditChangeMaterial2.value)
-        )
+            // 変更可能なマテリアルフィールド
+            TextScreenSubTitle("変更を動的反映", TextGroupScreenTag.TextTitleChangeMaterial2)
+            OutlinedTextField(
+                value = text3,
+                onValueChange = { changeText3(it) },
+                label = { Text("動的変更") },
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag(TextGroupScreenTag.EditChangeMaterial2.value)
+            )
 
-        // テキスト
-        Text(
-            textResult,
-            fontStyle = FontStyle.Italic,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+            // テキスト
+            Text(
+                textResult,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
+
+        }
     }
 
 }
