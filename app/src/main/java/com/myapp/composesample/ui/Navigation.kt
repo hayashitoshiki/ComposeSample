@@ -112,9 +112,8 @@ fun AppNavHost(
         composable(route = NavigationScreens.FIRST_SCREEN.route) { FirstScreen(firstViewModel, navController) }
         composable(route = NavigationScreens.THIRD_SCREEN.route) { ThirdScreen() }
         composable(route = NavigationScreens.TEXT_GROUP_SCREEN.route) { TextGroupScreen(textViewModel) }
-//        composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
-        composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextScrollerScreen() }
-//        composable(route = NavigationScreens.TEXT_SCROLLER_SCREEN.route) { TextScrollerScreen() }
+        composable(route = NavigationScreens.TEXT_GROUP_EXTRA_SCREEN.route) { TextGroupExtraScreen(viewModel()) }
+        composable(route = NavigationScreens.TEXT_SCROLLER_SCREEN.route) { TextScrollerScreen() }
         composable(route = NavigationScreens.BUTTON_GROUP_SCREEN.route) { ButtonGroupScreen(buttonViewModel) }
         composable(route = NavigationScreens.LOGIC_GROUP_SCREEN.route) { LogicGroupScreen(logicViewModel) }
         composable(route = NavigationScreens.LIST_GROUP_SCREEN.route) { ListGroupScreen(viewModel()) }

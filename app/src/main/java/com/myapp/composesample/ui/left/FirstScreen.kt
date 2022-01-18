@@ -6,8 +6,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -83,6 +86,15 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
                         restoreState = true
                     }
                 }
+                is FirstContract.Effect.NavigateToTextScrollerScreen -> {
+                    navController.navigate(NavigationScreens.TEXT_SCROLLER_SCREEN.route) {
+                        popUpTo(NavigationScreens.FIRST_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
                 is FirstContract.Effect.NavigateToListGroupScreen -> {
                     navController.navigate(NavigationScreens.LIST_GROUP_SCREEN.route) {
                         popUpTo(NavigationScreens.FIRST_SCREEN.route) {
@@ -126,6 +138,9 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
     val navigateToTextGroupExtraScreen: () -> Unit = {
         viewModel.setEvent(FirstContract.Event.NavigateToTextGroupExtraScreen)
     }
+    val navigateToTextScrollerScreen: () -> Unit = {
+        viewModel.setEvent(FirstContract.Event.NavigateToTextScrollerScreen)
+    }
     val navigateToButtonGroupScreen: () -> Unit = {
         viewModel.setEvent(FirstContract.Event.NavigateToButtonGroupScreen)
     }
@@ -136,15 +151,14 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
         viewModel.setEvent(FirstContract.Event.NavigateToListGroupScreen)
     }
     // 画面描画
-    Column(modifier = Modifier.fillMaxWidth()) {
-        ConstraintLayoutContent(
-            navigateToTextGroupScreen,
-            navigateToTextGroupExtraScreen,
-            navigateToButtonGroupScreen,
-            navigateToLogicScreen,
-            navigateToLListGroupScreen
-        )
-    }
+    ConstraintLayoutContent(
+        navigateToTextGroupScreen,
+        navigateToTextGroupExtraScreen,
+        navigateToTextScrollerScreen,
+        navigateToButtonGroupScreen,
+        navigateToLogicScreen,
+        navigateToLListGroupScreen
+    )
 }
 
 /**
@@ -155,12 +169,17 @@ fun FirstScreen(viewModel: FirstViewModel, navController: NavHostController) {
 fun ConstraintLayoutContent(
     navigateToTextGroupScreen: () -> Unit,
     navigateToTextGroupExtraScreen: () -> Unit,
+    navigateToTextScrollerScreen: () -> Unit,
     navigateToButtonGroupScreen: () -> Unit,
     navigateToLogicScreen: () -> Unit,
     navigateToLListGroupScreen: () -> Unit
 ) {
-    ConstraintLayout {
-        val (title, img, button1, button2, button3, button4, button5) = createRefs()
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        val (title, img, buttonArea) = createRefs()
 
         // タイトル
         Text(
@@ -185,63 +204,62 @@ fun ConstraintLayoutContent(
                     top.linkTo(title.bottom, margin = 32.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                    bottom.linkTo(button1.top, margin = 64.dp)
                 }
         )
+        Column(modifier = Modifier.constrainAs(buttonArea) {
+            top.linkTo(img.bottom, margin = 32.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            bottom.linkTo(parent.bottom, margin = 8.dp)
+        }) {
 
-        // テキストScreenボタン
-        Button(
-            onClick = { navigateToTextGroupScreen() },
-            modifier = Modifier.constrainAs(button1) {
-                start.linkTo(parent.start, margin = 8.dp)
-                bottom.linkTo(parent.bottom, margin = 64.dp)
+            // テキストScreenボタン
+            Button(
+                onClick = { navigateToTextGroupScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_text_screen))
             }
-        ) {
-            Text(stringResource(id = R.string.btn_text_screen))
-        }
 
-        // テキストExtraScreenボタン
-        Button(
-            onClick = { navigateToTextGroupExtraScreen() },
-            modifier = Modifier.constrainAs(button4) {
-                start.linkTo(button1.start)
-                top.linkTo(button1.bottom, margin = 16.dp)
+            // テキストExtraScreenボタン
+            Button(
+                onClick = { navigateToTextGroupExtraScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_text_extra_screen))
             }
-        ) {
-            Text(stringResource(id = R.string.btn_text_extra_screen))
-        }
 
-        // ButtonScreenボタン
-        Button(
-            onClick = { navigateToButtonGroupScreen() },
-            modifier = Modifier.constrainAs(button2) {
-                start.linkTo(button1.end, margin = 16.dp)
-                bottom.linkTo(button1.bottom)
+            // テキストExtraScreenボタン
+            Button(
+                onClick = { navigateToTextScrollerScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_text_scroll_screen))
             }
-        ) {
-            Text(stringResource(id = R.string.btn_button_screen))
-        }
 
-        // ロジック関連ボタン
-        Button(
-            onClick = { navigateToLogicScreen() },
-            modifier = Modifier.constrainAs(button3) {
-                start.linkTo(button2.end, margin = 16.dp)
-                bottom.linkTo(button2.bottom)
+            // ButtonScreenボタン
+            Button(
+                onClick = { navigateToButtonGroupScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_button_screen))
             }
-        ) {
-            Text(stringResource(id = R.string.btn_logic_screen))
-        }
 
-        // リスト関連ボタン
-        Button(
-            onClick = { navigateToLListGroupScreen() },
-            modifier = Modifier.constrainAs(button5) {
-                top.linkTo(button4.bottom, margin = 16.dp)
-                start.linkTo(button4.start)
+            // ロジック関連ボタン
+            Button(
+                onClick = { navigateToLogicScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_logic_screen))
             }
-        ) {
-            Text(stringResource(id = R.string.btn_list_screen))
+
+            // リスト関連ボタン
+            Button(
+                onClick = { navigateToLListGroupScreen() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(id = R.string.btn_list_screen))
+            }
         }
     }
 }
