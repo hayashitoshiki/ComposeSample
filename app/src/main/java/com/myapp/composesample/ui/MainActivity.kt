@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.myapp.composesample.ui.left.*
 import com.myapp.composesample.util.component.AppBottomNavigation
 import com.myapp.composesample.util.theme.ComposeSampleTheme
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
     private val textViewModel: TextGroupViewModel by viewModels()
     private val buttonViewModel: ButtonGroupViewModel by viewModels()
 
+    @ExperimentalPagerApi
     @ExperimentalComposeUiApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
  * ベース画面
  *
  */
+@ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable

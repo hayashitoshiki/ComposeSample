@@ -8,11 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.myapp.composesample.util.component.Sample1TabComponent
 
 /**
  * 右画面
  *
  */
+@ExperimentalPagerApi
 @Preview(showBackground = true)
 @Composable
 fun ThirdScreen() {
@@ -23,7 +26,7 @@ fun ThirdScreen() {
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
-            Text(text = "Third")
+            Sample1TabComponent()
         }
     }
 }

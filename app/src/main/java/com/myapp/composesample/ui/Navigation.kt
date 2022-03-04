@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.myapp.composesample.R
 import com.myapp.composesample.ui.center.ResponsibleConstraintScreen
 import com.myapp.composesample.ui.center.SecondScreen
@@ -94,6 +95,7 @@ enum class NavigationScreens(
  *
  * @param navController ナビゲーションAPI
  */
+@ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable

@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.RelocationRequester
-import androidx.compose.ui.layout.relocationRequester
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 
 
 /**
@@ -52,7 +52,7 @@ fun MainContent(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    val bringIntoViewRequester = remember { RelocationRequester() }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -68,7 +68,7 @@ fun MainContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .relocationRequester(bringIntoViewRequester),
+                .bringIntoViewRequester(bringIntoViewRequester),
             elevation = 8.dp
         ) {
             Column {
