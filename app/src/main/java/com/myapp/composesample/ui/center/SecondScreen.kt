@@ -18,11 +18,18 @@ fun SecondScreen(navController: NavHostController) {
         backgroundColor = Color(0xfff5f5f5)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+            Column() {
+                Button(
+                    onClick = { navController.navigate(NavigationScreens.RESPONSIBLE_SCREEN.route) }
+                ) {
+                    Text(text = "レスポンシブルレイアウト")
+                }
 
-            Button(
-                onClick = { navController.navigate(NavigationScreens.RESPONSIBLE_SCREEN.route) }
-            ){
-                Text(text = "レスポンシブルレイアウト")
+                Button(
+                    onClick = { navController.navigate(NavigationScreens.ANIMATION_SCREEN.route) }
+                ) {
+                    Text(text = "アニメーション関連")
+                }
             }
         }
     }

@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -29,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private val textViewModel: TextGroupViewModel by viewModels()
     private val buttonViewModel: ButtonGroupViewModel by viewModels()
 
+    @ExperimentalMaterialApi
+    @ExperimentalAnimationApi
     @ExperimentalPagerApi
     @ExperimentalComposeUiApi
     @ExperimentalFoundationApi
@@ -51,6 +55,8 @@ class MainActivity : ComponentActivity() {
  * ベース画面
  *
  */
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

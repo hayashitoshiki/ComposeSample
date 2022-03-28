@@ -1,7 +1,9 @@
 package com.myapp.composesample.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -15,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.myapp.composesample.R
+import com.myapp.composesample.ui.center.AnimationScreen
 import com.myapp.composesample.ui.center.ResponsibleConstraintScreen
 import com.myapp.composesample.ui.center.SecondScreen
 import com.myapp.composesample.ui.left.*
@@ -45,6 +48,7 @@ enum class NavigationScreens(
     // 中央タブ
     SECOND_SCREEN(Group.CENTER, "second_fragment_navigate", R.string.second_nav),
     RESPONSIBLE_SCREEN(Group.CENTER, "responsible_fragment_navigate", R.string.second_nav),
+    ANIMATION_SCREEN(Group.CENTER, "animation_fragment_navigate", R.string.second_nav),
 
     // 右タブ
     THIRD_SCREEN(Group.RIGHT, "third_fragment_navigate", R.string.third_nav);
@@ -95,6 +99,8 @@ enum class NavigationScreens(
  *
  * @param navController ナビゲーションAPI
  */
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -123,6 +129,6 @@ fun AppNavHost(
         // 中央タブ
         composable(route = NavigationScreens.SECOND_SCREEN.route) { SecondScreen(navController) }
         composable(route = NavigationScreens.RESPONSIBLE_SCREEN.route) { ResponsibleConstraintScreen(navController) }
-
+        composable(route = NavigationScreens.ANIMATION_SCREEN.route) { AnimationScreen(navController) }
     }
 }
