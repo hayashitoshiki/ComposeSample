@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.platform.LocalFontLoader
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.AnnotatedString
@@ -150,6 +151,7 @@ fun AutoSizeText(
     }
 }
 
+
 @OptIn(InternalFoundationTextApi::class)
 @Composable
 private fun BoxWithConstraintsScope.shouldShrink(
@@ -164,7 +166,7 @@ private fun BoxWithConstraintsScope.shouldShrink(
         true,
         TextOverflow.Clip,
         LocalDensity.current,
-        LocalFontLoader.current,
+        LocalFontFamilyResolver.current,
     )
 
     val textLayoutResult = textDelegate.layout(

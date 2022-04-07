@@ -1,5 +1,6 @@
 package com.myapp.composesample.ui.center
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import com.myapp.composesample.ui.NavigationScreens
  * 中央画面
  *
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SecondScreen(navController: NavHostController) {
     Scaffold(
@@ -29,6 +31,11 @@ fun SecondScreen(navController: NavHostController) {
                     onClick = { navController.navigate(NavigationScreens.ANIMATION_SCREEN.route) }
                 ) {
                     Text(text = "アニメーション関連")
+                }
+                Button(
+                    onClick = { navController.navigate(NavigationScreens.LIST_SCREEN.route) }
+                ) {
+                    Text(text = "リスト表示関連")
                 }
             }
         }

@@ -71,13 +71,12 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    // レスポンシブル
-    def accompanist_version = "0.20.3"
-    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
-
     // Accompanist
-    implementation "com.google.accompanist:accompanist-pager:0.23.0"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.23.0"
+    def accompanist_version = "0.24.6-alpha"
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
 
     // navigation
     def compose_navigation_version = "2.4.0-alpha04"

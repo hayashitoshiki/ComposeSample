@@ -1,12 +1,9 @@
 package com.myapp.composesample.ui.left
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -20,16 +17,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.myapp.composesample.R
-import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 /**
  * テキスト関連発展画面
  *
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ListGroupScreen(viewModel: ListGroupViewModel) {
 
@@ -159,6 +155,7 @@ private fun TextListItem(text: String) {
  * プレビュー表示
  *
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Preview(
     showBackground = true,
     name = "Light Mode"
