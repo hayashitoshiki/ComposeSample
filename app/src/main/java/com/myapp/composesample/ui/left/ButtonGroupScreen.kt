@@ -11,10 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -23,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myapp.composesample.R
+import com.myapp.composesample.util.component.CustomSpinner
 
 /**
  * テキスト関連画面
@@ -210,6 +209,28 @@ private fun ButtonScreenMainContent(
             checked = switchValue,
             onCheckedChange = { changeSwitch(it) }
         )
+
+        // Spinner
+        ButtonScreenSubTitle("Spiner")
+        var selectedIndex by remember { mutableStateOf(0) }
+        val items = listOf(
+            "一番上は洗濯しても反映されません",
+            "２番目",
+            "３番目",
+            "４番目"
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            CustomSpinner(
+                menuItems = items,
+                selectedIndex = selectedIndex,
+                onMenuItemClick = { selectedIndex = it }
+            )
+        }
     }
 
 }
