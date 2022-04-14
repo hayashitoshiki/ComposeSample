@@ -26,5 +26,6 @@ interface ListContract : BaseContract {
      */
     sealed class Event : BaseContract.Event {
         object Refresh : Event()
+        data class MoveList(val from: Int, val to: Int) : Event()
     }
 }

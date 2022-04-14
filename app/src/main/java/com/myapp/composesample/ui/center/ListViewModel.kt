@@ -5,6 +5,7 @@ import com.myapp.composesample.util.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.burnoutcrew.reorderable.move
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -19,8 +20,9 @@ class ListViewModel @Inject constructor() :
         return ListContract.State()
     }
 
-    override fun handleEvents(event: ListContract.Event) {
-        updateList()
+    override fun handleEvents(event: ListContract.Event) = when(event) {
+        is ListContract.Event.MoveList -> moveList(event.from, event.to)
+        is ListContract.Event.Refresh -> updateList()
     }
 
     private fun updateList() {
@@ -38,5 +40,13 @@ class ListViewModel @Inject constructor() :
                 )
             }
         }
+    }
+
+    private fun moveList(from: Int, to: Int) {
+        val list = state.value
+            .sampleContent
+            .toMutableList()
+            .also { it.move(from, to) }
+        setState { copy(sampleContent = list) }
     }
 }

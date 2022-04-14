@@ -8,6 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.draggedItem
+import org.burnoutcrew.reorderable.rememberReorderState
+import org.burnoutcrew.reorderable.reorderable
 
 /**
  * リスト用画面
@@ -23,11 +27,15 @@ fun ListScreen(viewModel: ListViewModel) {
     val refresh: () -> Unit = {
         viewModel.setEvent(ListContract.Event.Refresh)
     }
+    val moveList: (Int, Int) -> Unit = { from, to ->
+        viewModel.setEvent(ListContract.Event.MoveList(from, to))
+    }
 
     // content
     ListContent(
         state,
-        refresh
+        refresh,
+        moveList
     )
 
 }
@@ -38,18 +46,35 @@ fun ListScreen(viewModel: ListViewModel) {
 @Composable
 private fun ListContent(
     state: ListContract.State,
-    refresh: () -> Unit
+    refresh: () -> Unit,
+    moveList: (Int, Int) -> Unit
 ) {
+    val reorderState = rememberReorderState()
     Column {
         // こいつがpull to Refresh を行っている
         SwipeRefresh(
             state = rememberSwipeRefreshState(state.isRefreshing),
             onRefresh = { refresh() },
         ) {
-            LazyColumn {
-                state.sampleContent.forEach{
-                    item {
-                        ListContentCard(it)
+            LazyColumn(
+                state = reorderState.listState,
+                modifier = Modifier
+                    .reorderable(
+                        state = reorderState,
+                        onMove = { from, to ->
+                            moveList(from.index, to.index)
+                        },
+                    ),
+            ) {
+                state.sampleContent.forEachIndexed { index, item ->
+                    item{
+                        Box(
+                            modifier = Modifier
+                                .detectReorderAfterLongPress(reorderState)
+                                .draggedItem(reorderState.offsetByIndex(index))
+                        ){
+                            ListContentCard(item)
+                        }
                     }
                 }
             }
