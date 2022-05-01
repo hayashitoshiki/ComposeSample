@@ -17,10 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.myapp.composesample.R
-import com.myapp.composesample.ui.center.AnimationScreen
-import com.myapp.composesample.ui.center.ListScreen
-import com.myapp.composesample.ui.center.ResponsibleConstraintScreen
-import com.myapp.composesample.ui.center.SecondScreen
+import com.myapp.composesample.ui.center.*
 import com.myapp.composesample.ui.left.*
 import com.myapp.composesample.ui.right.ThirdScreen
 
@@ -51,6 +48,7 @@ enum class NavigationScreens(
     RESPONSIBLE_SCREEN(Group.CENTER, "responsible_fragment_navigate", R.string.second_nav),
     ANIMATION_SCREEN(Group.CENTER, "animation_fragment_navigate", R.string.second_nav),
     LIST_SCREEN(Group.CENTER, "list_fragment_navigate", R.string.second_nav),
+    CHART_SCREEN(Group.CENTER, "chart_fragment_navigate", R.string.second_nav),
 
     // 右タブ
     THIRD_SCREEN(Group.RIGHT, "third_fragment_navigate", R.string.third_nav);
@@ -133,5 +131,7 @@ fun AppNavHost(
         composable(route = NavigationScreens.RESPONSIBLE_SCREEN.route) { ResponsibleConstraintScreen(navController) }
         composable(route = NavigationScreens.ANIMATION_SCREEN.route) { AnimationScreen(navController) }
         composable(route = NavigationScreens.LIST_SCREEN.route) { ListScreen(viewModel()) }
+        composable(route = NavigationScreens.CHART_SCREEN.route) { ChartScreen(viewModel()) }
+
     }
 }

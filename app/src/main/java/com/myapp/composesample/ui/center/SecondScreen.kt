@@ -37,6 +37,11 @@ fun SecondScreen(navController: NavHostController) {
                 ) {
                     Text(text = "リスト表示関連")
                 }
+                Button(
+                    onClick = { navController.navigate(NavigationScreens.CHART_SCREEN.route) }
+                ) {
+                    Text(text = "グラフ表示")
+                }
             }
         }
     }
