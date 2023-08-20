@@ -7,6 +7,9 @@ package com.myapp.composesample.util.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -313,7 +316,7 @@ private fun ScrollableTabBar(tabs: List<TabItem>, pagerState: PagerState) {
 
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
-        edgePadding = 0.dp,
+         edgePadding = 0.dp,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, tabPositions))
         }
@@ -401,5 +404,137 @@ private fun CustomTabBar(tabs: List<TabItem>, pagerState: PagerState) {
 private fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
     HorizontalPager(state = pagerState, count = tabs.size) { page ->
         tabs[page].screen()
+    }
+}
+
+/**
+ * タブサンプル６
+ *
+ * @property title タイトル
+ * @property index タブ番号
+ * @property item タブの中のアイテム
+ *
+ */
+data class Tab6(val title: String, val index: Int, val item: List<Item6>)
+
+/**
+ * アイテムサンプル６
+ *
+ * @property title タイトル
+ * @property tabIndex タブのインデックス
+ */
+data class Item6(val title: String, val tabIndex: Int)
+
+/**
+ * タブサンプル６
+ *
+ * タブをタップしたらタップしたタブの子のItemの先頭へスクロールし、
+ * アイテムをスクロールしたら先頭のアイテムが所属するタブの色が変更される
+ *
+ */
+@Composable
+fun Sample6TabComponent() {
+    val tabs = listOf(
+        Tab6(
+            "ジャンル",
+            1,
+            listOf(
+                Item6("ジャンル１", 1),
+                Item6("ジャンル2", 1),
+                Item6("ジャンル3", 1),
+                Item6("ジャンル4", 1),
+            )
+        ),
+        Tab6(
+            "アニメ",
+            2,
+            listOf(
+                Item6("アニメ１", 2),
+                Item6("アニメ２", 2),
+                Item6("アニメ３", 2),
+                Item6("アニメ４", 2),
+                Item6("アニメ5", 2),
+                Item6("アニメ6", 2),
+                Item6("アニメ7", 2),
+                Item6("アニメ8", 2),
+            )
+        ),
+        Tab6(
+            "スポーツ",
+            3,
+            listOf(
+                Item6("スポーツ１", 3),
+                Item6("スポーツ２", 3),
+                Item6("スポーツ３", 3),
+                Item6("スポーツ４", 3),
+            )
+        ),
+    )
+
+    val selectPage = remember { mutableStateOf(1) }
+    val item: List<Item6> = tabs.flatMap { it.item }
+    val listState = rememberLazyListState()
+    var scrollToIndex by remember { mutableStateOf(-1) }
+
+    Column {
+        LazyRow {
+            items(tabs) { tab ->
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(150.dp)
+                        .background(
+                            if (tab.index == selectPage.value) {
+                                Color.Green
+                            } else {
+                                Color.Black
+                            }
+                        )
+                ) {
+                    Button(
+                        onClick = {
+                            scrollToIndex = item.indexOfFirst { it.tabIndex == tab.index }
+                        }
+                    ) {
+                        Text(text = tab.title)
+                    }
+                }
+            }
+        }
+
+        // 選択されたタブに対応するアイテムがスクロールの先頭にくるようにする
+        if (scrollToIndex != -1) {
+            LaunchedEffect(scrollToIndex) {
+                listState.animateScrollToItem(scrollToIndex)
+                scrollToIndex = -1
+            }
+        }
+
+        LazyRow(state = listState) {
+            items(item) { abemaItem ->
+                Box(
+                    modifier = Modifier
+                        .height(150.dp)
+                        .background(
+                            if (listState.layoutInfo.visibleItemsInfo.isNotEmpty() &&
+                                listState.layoutInfo.visibleItemsInfo.first().index == item.indexOf(abemaItem)
+                            ) {
+                                // スクロール時に先頭に表示されているアイテムのtabIndexをselectPageに設定
+                                if (listState.firstVisibleItemIndex == item.indexOf(abemaItem)) {
+                                    selectPage.value = abemaItem.tabIndex
+                                }
+                                Color.Green
+                            } else {
+                                Color.Blue
+                            }
+                        )
+                        .padding(8.dp)
+                ) {
+                    Button(onClick = { /*TODO*/ }) {
+                        Text(text = abemaItem.title)
+                    }
+                }
+            }
+        }
     }
 }
