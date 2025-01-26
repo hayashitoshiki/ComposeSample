@@ -311,7 +311,10 @@ private fun ButtonScreenMainContent(
         Button(
             modifier = Modifier,
             onClick = {button25Enable.value = !button25Enable.value},
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton0),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton0,
+                disabledBackgroundColor = alphaButton0,
+            ),
             enabled = button0Enable.value
         ) {
             Text("アニメーションスピード0")
@@ -320,7 +323,10 @@ private fun ButtonScreenMainContent(
         Button(
             modifier = Modifier,
             onClick = {button50Enable.value = !button50Enable.value},
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton25),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton25,
+                disabledBackgroundColor = alphaButton25,
+            ),
             enabled = button25Enable.value
         ) {
             Text("アニメーションスピード25")
@@ -328,7 +334,10 @@ private fun ButtonScreenMainContent(
         Spacer(modifier = Modifier.size(16.dp))
         Button(
             modifier = Modifier,
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton50),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton50,
+                disabledBackgroundColor = alphaButton50,
+            ),
             onClick = {button1Enable.value = !button1Enable.value},
             enabled = button50Enable.value
         ) {
@@ -337,7 +346,10 @@ private fun ButtonScreenMainContent(
         Spacer(modifier = Modifier.size(16.dp))
         Button(
             modifier = Modifier,
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton1),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton1,
+                disabledBackgroundColor = alphaButton1,
+            ),
             onClick = {button150Enable.value = !button150Enable.value},
             enabled = button1Enable.value
         ) {
@@ -346,7 +358,10 @@ private fun ButtonScreenMainContent(
         Spacer(modifier = Modifier.size(16.dp))
         Button(
             modifier = Modifier,
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton150),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton150,
+                disabledBackgroundColor = alphaButton150,
+            ),
             onClick = {button2Enable.value = !button2Enable.value},
             enabled = button150Enable.value
         ) {
@@ -355,7 +370,10 @@ private fun ButtonScreenMainContent(
         Spacer(modifier = Modifier.size(16.dp))
         Button(
             modifier = Modifier,
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton2),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton2,
+                disabledBackgroundColor = alphaButton2,
+            ),
             onClick = {button3Enable.value = !button3Enable.value},
             enabled = button2Enable.value
         ) {
@@ -363,7 +381,10 @@ private fun ButtonScreenMainContent(
         }
         Spacer(modifier = Modifier.size(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton3),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton3,
+                disabledBackgroundColor = alphaButton3,
+            ),
             onClick = {button4Enable.value = !button4Enable.value},
             modifier = Modifier,
             enabled = button3Enable.value
@@ -372,7 +393,10 @@ private fun ButtonScreenMainContent(
         }
         Spacer(modifier = Modifier.size(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton4),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton4,
+                disabledBackgroundColor = alphaButton4,
+            ),
             onClick = {button5Enable.value = !button5Enable.value},
             modifier = Modifier,
             enabled = button4Enable.value
@@ -381,7 +405,10 @@ private fun ButtonScreenMainContent(
         }
         Spacer(modifier = Modifier.size(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton5),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = alphaButton5,
+                disabledBackgroundColor = alphaButton5,
+            ),
             onClick = {button0Enable.value = !button0Enable.value},
             modifier = Modifier,
             enabled = button5Enable.value
