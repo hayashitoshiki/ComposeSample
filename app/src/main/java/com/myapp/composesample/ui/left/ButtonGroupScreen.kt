@@ -2,6 +2,8 @@ package com.myapp.composesample.ui.left
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
@@ -230,6 +232,161 @@ private fun ButtonScreenMainContent(
                 selectedIndex = selectedIndex,
                 onMenuItemClick = { selectedIndex = it }
             )
+        }
+
+        // Slider
+        ButtonScreenSubTitle("ボタン活性制御アニメーション")
+        val button0Enable = remember { mutableStateOf(true) }
+        val button25Enable = remember { mutableStateOf(true) }
+        val button50Enable = remember { mutableStateOf(true) }
+        val button1Enable = remember { mutableStateOf(true) }
+        val button150Enable = remember { mutableStateOf(true) }
+        val button2Enable = remember { mutableStateOf(true) }
+        val button3Enable = remember { mutableStateOf(true) }
+        val button4Enable = remember { mutableStateOf(true) }
+        val button5Enable = remember { mutableStateOf(true) }
+        val alphaButton0: Color by animateColorAsState(
+            targetValue = if (button0Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 0,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton25: Color by animateColorAsState(
+            targetValue = if (button25Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 20,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton50: Color by animateColorAsState(
+            targetValue = if (button50Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 50,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton1: Color by animateColorAsState(
+            targetValue = if (button1Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 100,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton150: Color by animateColorAsState(
+            targetValue = if (button150Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 150,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton2: Color by animateColorAsState(
+            targetValue = if (button2Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis = 200,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton3: Color by animateColorAsState(
+            targetValue = if (button3Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis =300,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton4: Color by animateColorAsState(
+            targetValue = if (button4Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis =400,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        val alphaButton5: Color by animateColorAsState(
+            targetValue = if (button5Enable.value) MaterialTheme.colors.primary else Color.Gray, // 活性時は青、非活性時は灰色
+            animationSpec = tween(
+                durationMillis =500,  // アニメーションの持続時間
+                easing = FastOutSlowInEasing
+            )
+        )
+        Button(
+            modifier = Modifier,
+            onClick = {button25Enable.value = !button25Enable.value},
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton0),
+            enabled = button0Enable.value
+        ) {
+            Text("アニメーションスピード0")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            modifier = Modifier,
+            onClick = {button50Enable.value = !button50Enable.value},
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton25),
+            enabled = button25Enable.value
+        ) {
+            Text("アニメーションスピード25")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            modifier = Modifier,
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton50),
+            onClick = {button1Enable.value = !button1Enable.value},
+            enabled = button50Enable.value
+        ) {
+            Text("アニメーションスピード50")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            modifier = Modifier,
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton1),
+            onClick = {button150Enable.value = !button150Enable.value},
+            enabled = button1Enable.value
+        ) {
+            Text("アニメーションスピード100")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            modifier = Modifier,
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton150),
+            onClick = {button2Enable.value = !button2Enable.value},
+            enabled = button150Enable.value
+        ) {
+            Text("アニメーションスピード150")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            modifier = Modifier,
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton2),
+            onClick = {button3Enable.value = !button3Enable.value},
+            enabled = button2Enable.value
+        ) {
+            Text("アニメーションスピード200")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton3),
+            onClick = {button4Enable.value = !button4Enable.value},
+            modifier = Modifier,
+            enabled = button3Enable.value
+        ) {
+            Text("アニメーションスピード300")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton4),
+            onClick = {button5Enable.value = !button5Enable.value},
+            modifier = Modifier,
+            enabled = button4Enable.value
+        ) {
+            Text("アニメーションスピード400")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(
+            colors = ButtonDefaults.buttonColors(backgroundColor = alphaButton5),
+            onClick = {button0Enable.value = !button0Enable.value},
+            modifier = Modifier,
+            enabled = button5Enable.value
+        ) {
+            Text("アニメーションスピード500")
         }
     }
 
